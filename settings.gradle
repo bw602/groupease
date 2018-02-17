@@ -1,0 +1,5 @@
+rootProject.name = 'groupease'
+
+include 'groupease-server'
+include 'groupease-client'
+
