@@ -4,7 +4,8 @@ plugins {
 
 dependencies {
 
-    compile (project(':groupease-client'))
+    /* Depends on client when packaging. */
+    runtime (project(':groupease-client'))
 
     compile ('ch.qos.logback:logback-classic:1.2.3')
     compile ('com.google.code.findbugs:jsr305:3.0.2')
@@ -35,6 +36,11 @@ dependencies {
 
     /* URL rewrite filter for supporting HTML5-style URLs. */
     compile ('org.tuckey:urlrewritefilter:4.0.3')
+
+    /* Guice-Persist, Postgresql, and Hibernate. */
+    compile ('com.google.inject.extensions:guice-persist:4.1.0')
+    compile ('org.postgresql:postgresql:42.2.1')
+    compile ('org.hibernate:hibernate-core:5.2.13.Final')
 
     /* Run war in Tomcat (needed for Heroku). */
     compile ('com.github.jsimone:webapp-runner:8.5.11.3')

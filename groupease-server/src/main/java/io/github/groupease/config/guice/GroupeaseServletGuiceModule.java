@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.inject.Singleton;
 
+import com.google.inject.persist.PersistFilter;
 import com.google.inject.servlet.ServletModule;
 import io.github.groupease.config.jersey.GroupeaseJerseyConfig;
 import org.glassfish.jersey.server.ServerProperties;
@@ -19,7 +20,12 @@ public class GroupeaseServletGuiceModule extends ServletModule {
 
     @Override
     protected void configureServlets() {
+        configureJpaFilter();
         configureJerseyFilter();
+    }
+
+    private void configureJpaFilter() {
+        filter("/*").through(PersistFilter.class);
     }
 
     private void configureJerseyFilter() {

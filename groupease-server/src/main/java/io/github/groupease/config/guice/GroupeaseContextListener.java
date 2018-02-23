@@ -5,6 +5,8 @@ import java.lang.invoke.MethodHandles;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +19,23 @@ public class GroupeaseContextListener extends GuiceServletContextListener {
 
     private static Injector guiceInjector;
 
+    private static Config createConfig() {
+        LOGGER.info("Creating Typesafe Config.");
+
+        Config config = ConfigFactory.load();
+
+        LOGGER.info("Typesafe Config Created.");
+
+        return config;
+    }
+
     private static void createInjector() {
         LOGGER.info("Creating Guice Injector.");
 
+        Config config = createConfig();
+
         guiceInjector = Guice.createInjector(
-                new GroupeaseServletGuiceModule(),
-                new GroupeaseGuiceModule()
+                new GroupeaseGuiceModule(config)
         );
 
         LOGGER.info("Guice Injector Created.");
