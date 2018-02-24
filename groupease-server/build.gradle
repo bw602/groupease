@@ -18,10 +18,12 @@ dependencies {
     compile ('com.palominolabs.metrics:metrics-guice:3.3.0')
 
     /* Jackson. */
-    compile('com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.3')
-    compile ('com.fasterxml.jackson.core:jackson-annotations:2.9.3')
-    compile ('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.3')
-    compile ('com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.3')
+    compile('com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.4')
+    compile ('com.fasterxml.jackson.core:jackson-annotations:2.9.4')
+    compile ('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4')
+    compile ('com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.4')
+    compile ('com.fasterxml.jackson.module:jackson-modules-java8:2.9.4')
+    compile ('com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.4')
 
     /* Guice. */
     compile ('com.google.inject:guice:4.1.0')
@@ -39,7 +41,7 @@ dependencies {
 
     /* Guice-Persist, Postgresql, and Hibernate. */
     compile ('com.google.inject.extensions:guice-persist:4.1.0')
-    compile ('org.postgresql:postgresql:42.2.1')
+    compile ("org.postgresql:postgresql:${rootProject.postgressqlVersion}")
     compile ('org.hibernate:hibernate-core:5.2.13.Final')
 
     /* Run war in Tomcat (needed for Heroku). */

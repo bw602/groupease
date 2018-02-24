@@ -1,9 +1,0 @@
-DROP TABLE IF EXISTS Channel;
-
-CREATE TABLE Channel (
-    id BIGSERIAL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    description TEXT NULL,
-    createdOn TIMESTAMP NOT NULL,
-    lastUpdatedOn TIMESTAMP NOT NULL
-);

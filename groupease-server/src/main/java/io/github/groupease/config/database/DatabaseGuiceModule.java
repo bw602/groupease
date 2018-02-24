@@ -61,16 +61,6 @@ public class DatabaseGuiceModule extends AbstractModule {
         );
 
         dbProperties.put(
-                "javax.persistence.jdbc.user",
-                dbPropertyConfig.getString("user")
-        );
-
-        dbProperties.put(
-                "javax.persistence.jdbc.password",
-                dbPropertyConfig.getString("password")
-        );
-
-        dbProperties.put(
                 "hibernate.dialect",
                 dbPropertyConfig.getString("dialect")
         );

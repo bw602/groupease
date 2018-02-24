@@ -1,3 +1,39 @@
+buildscript {
+
+    project.ext {
+        postgressqlVersion = "42.2.1"
+    }
+
+    dependencies {
+        classpath ("org.postgresql:postgresql:${rootProject.postgressqlVersion}")
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "5.0.7"
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+flyway {
+
+    /* Use environment variable if it exists, otherwise local fallback. */
+    url = System.getenv(
+            "JDBC_DATABASE_URL"
+    ) ?: 'jdbc:postgresql://localhost:5432/groupease_db?user=groupease_sql&password=changeit'
+
+    /* Where to look for migration SQL scripts. */
+    locations = ['filesystem:db/migration']
+}
+
+/* Migrate DB when stage task runs. */
+task stage() {
+    dependsOn flywayMigrate
+}
+
 subprojects {
     apply plugin: 'java'
 
@@ -6,10 +42,10 @@ subprojects {
         jcenter()
     }
 
-    group 'io.github'
-    version '1.0.0-SNAPSHOT'
-
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
+
+    group 'io.github'
+    version '1.0.0-SNAPSHOT'
 
 }

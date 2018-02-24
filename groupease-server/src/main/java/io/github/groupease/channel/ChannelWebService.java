@@ -1,5 +1,6 @@
 package io.github.groupease.channel;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -17,6 +18,8 @@ import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.util.Objects.requireNonNull;
 
@@ -27,6 +30,8 @@ import static java.util.Objects.requireNonNull;
 @Produces(MediaType.APPLICATION_JSON)
 @Immutable
 public class ChannelWebService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final ChannelService channelService;
 
@@ -51,6 +56,7 @@ public class ChannelWebService {
     @Timed
     @Nonnull
     public List<Channel> list() {
+        LOGGER.debug("ChannelWebService.list() called.");
         return channelService.list();
     }
 
@@ -67,6 +73,7 @@ public class ChannelWebService {
     public Channel getById(
             @PathParam("id") Long id
     ) {
+        LOGGER.debug("ChannelWebService.getById({}) called.", id);
         return channelService.getById(id);
     }
 
@@ -87,6 +94,7 @@ public class ChannelWebService {
             @PathParam("id") Long id,
             @Nonnull ChannelDto toUpdate
     ) {
+        LOGGER.debug("ChannelWebService.update({}, {}) called.", id, toUpdate);
         Preconditions.checkArgument(
                 id.equals(toUpdate.getId()),
                 "ID does not match the ID of the instance to update"
@@ -107,6 +115,7 @@ public class ChannelWebService {
     public Channel create(
             @Nonnull ChannelDto toCreate
     ) {
+        LOGGER.debug("ChannelWebService.create({}) called.", toCreate);
         return channelService.create(toCreate);
     }
 
@@ -121,6 +130,7 @@ public class ChannelWebService {
     public void delete(
             @PathParam("id") Long id
     ) {
+        LOGGER.debug("ChannelWebService.delete({}) called.", id);
         channelService.delete(id);
     }
 
