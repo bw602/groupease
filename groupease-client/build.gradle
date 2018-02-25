@@ -30,19 +30,24 @@ node {
 /* Run "npm run build" which executes the "build" script in package.json. */
 task ngBuild(type: NpmTask) {
   args = ['run', 'build']
+
+  dependsOn(check)
 }
 build.dependsOn(ngBuild)
-ngBuild.dependsOn(check)
 
 /* Run "npm run lint" which executes the "lint" script in package.json. */
 task ngLint(type: NpmTask) {
   args = ['run', 'lint']
+
+  dependsOn(npmInstall)
 }
 check.dependsOn(ngLint)
 
 /* Run "npm run test" which executes the "test" script in package.json. */
 task ngTest(type: NpmTask) {
   args = ['run', 'test']
+
+  dependsOn(npmInstall)
 }
 test.dependsOn(ngTest)
 
