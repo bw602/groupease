@@ -26,26 +26,29 @@ public final class Channel {
     private Instant lastUpdatedOn;
 
     /**
-     * Private constructor.
+     * Creates a new {@link Channel.Builder}.
      *
-     * @param id the numeric identifier for this channel.
-     * @param name the display name.
-     * @param description the channel description.
-     * @param createdOn the date this channel was created.
-     * @param lastUpdatedOn the date this channel was last updated.
+     * @return the new builder instance.
+     */
+    @Nonnull
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Private constructor.
+     * Defaults description to empty string; all other properties must be non-null.
+     *
+     * @param builder {@link Channel.Builder} to use to create instance.
      */
     private Channel(
-            long id,
-            @Nonnull String name,
-            @Nonnull String description,
-            @Nonnull Instant createdOn,
-            @Nonnull Instant lastUpdatedOn
+            @Nonnull Builder builder
     ) {
-        this.id = id;
-        this.name = requireNonNull(name);
-        this.description = requireNonNull(description);
-        this.createdOn = requireNonNull(createdOn);
-        this.lastUpdatedOn = requireNonNull(lastUpdatedOn);
+        this.id = requireNonNull(builder.getId());
+        this.name = requireNonNull(builder.getName());
+        this.description = Strings.nullToEmpty(builder.getDescription());
+        this.createdOn = requireNonNull(builder.getCreatedOn());
+        this.lastUpdatedOn = requireNonNull(builder.getLastUpdatedOn());
     }
 
     public long getId() {
@@ -99,16 +102,6 @@ public final class Channel {
         private Instant lastUpdatedOn;
 
         /**
-         * Creates a new {@link Channel} builder.
-         *
-         * @return the new builder
-         */
-        @Nonnull
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        /**
          * Creates a new {@link Channel} builder from an existing {@link Channel}.
          *
          * @param channel the {@link Channel} from which to copy data.
@@ -120,7 +113,7 @@ public final class Channel {
         ) {
             requireNonNull(channel, "channel cannot be null");
 
-            return builder()
+            return Channel.builder()
                     .withId(channel.getId())
                     .withName(channel.getName())
                     .withDescription(channel.getDescription())
@@ -140,7 +133,7 @@ public final class Channel {
         ) {
             requireNonNull(channelDto, "channelDto cannot be null");
 
-            return builder()
+            return Channel.builder()
                     .withId(channelDto.getId())
                     .withName(channelDto.getName())
                     .withDescription(channelDto.getDescription())
@@ -250,14 +243,7 @@ public final class Channel {
          */
         @Nonnull
         public Channel build() {
-            /* Defaults description to empty string; other properties are required. */
-            return new Channel(
-                    getId(),
-                    getName(),
-                    Strings.nullToEmpty(getDescription()),
-                    getCreatedOn(),
-                    getLastUpdatedOn()
-            );
+            return new Channel(this);
         }
 
         @Override
