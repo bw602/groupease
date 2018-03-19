@@ -22,7 +22,7 @@ public class MockChannelDao implements ChannelDao {
     public Channel getById(
             long id
     ) {
-        return Channel.Builder.builder()
+        return Channel.builder()
                 .withId(id)
                 .withName("Channel Name")
                 .withDescription("Channel Description")
