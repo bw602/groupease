@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import com.typesafe.config.Config;
+import io.github.groupease.auth.AuthGuiceModule;
 import io.github.groupease.channel.ChannelGuiceModule;
 import io.github.groupease.config.database.DatabaseGuiceModule;
 
@@ -32,8 +33,9 @@ public class GroupeaseGuiceModule extends AbstractModule {
     protected void configure() {
 
         /* Install other modules. */
-        install(new DatabaseGuiceModule(config));
+        install(new AuthGuiceModule());
         install(new ChannelGuiceModule());
+        install(new DatabaseGuiceModule(config));
         install(new GroupeaseServletGuiceModule());
 
         /* Add bindings. */
