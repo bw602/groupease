@@ -10,5 +10,4 @@ export class AppComponent {
   /* Apply groupease-view CSS class to the component element. */
   @HostBinding('class.groupease-view') true;
 
-  title = 'Groupease';
 }

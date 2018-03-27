@@ -8,6 +8,7 @@ import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Strings;
 import com.google.inject.persist.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,17 +37,17 @@ public class DefaultChannelService implements ChannelService {
         this.channelDao = requireNonNull(channelDao);
     }
 
-    @Timed
     @Nonnull
     @Override
+    @Timed
     public List<Channel> list() {
         LOGGER.debug("DefaultChannelService.list() called.");
         return channelDao.list();
     }
 
-    @Timed
     @Nonnull
     @Override
+    @Timed
     public Channel getById(
             long id
     ) {
@@ -54,35 +55,60 @@ public class DefaultChannelService implements ChannelService {
         return channelDao.getById(id);
     }
 
-    @Timed
-    @Transactional
     @Nonnull
     @Override
+    @Timed
+    @Transactional
     public Channel update(
             @Nonnull ChannelDto toUpdate
     ) {
         LOGGER.debug("DefaultChannelService.update({}) called.", toUpdate);
+
+        requireNonNull(toUpdate);
+
+        if (Strings.isNullOrEmpty(toUpdate.getName())) {
+            throw new ChannelNameMissingException("Channel name is required.");
+        }
+
+        /* Confirm toUpdate exists and current user has access. */
+        channelDao.getById(toUpdate.getId());
+
         return channelDao.update(toUpdate);
     }
 
-    @Timed
-    @Transactional
     @Nonnull
     @Override
+    @Timed
+    @Transactional
     public Channel create(
             @Nonnull ChannelDto toCreate
     ) {
         LOGGER.debug("DefaultChannelService.create({}) called.", toCreate);
+
+        requireNonNull(toCreate);
+
+        if (toCreate.getId() != null) {
+            throw new NewChannelHasIdException("A new Channel cannot already have an ID.");
+        }
+
+        if (Strings.isNullOrEmpty(toCreate.getName())) {
+            throw new ChannelNameMissingException("Channel name is required.");
+        }
+
         return channelDao.create(toCreate);
     }
 
+    @Override
     @Timed
     @Transactional
-    @Override
     public void delete(
             long id
     ) {
         LOGGER.debug("DefaultChannelService.delete({}) called.", id);
+
+        /* Confirm channel to delete exists and current user has access. */
+        channelDao.getById(id);
+
         channelDao.delete(id);
     }
 

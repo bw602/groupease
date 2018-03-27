@@ -85,6 +85,7 @@ public final class Channel {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -256,6 +257,7 @@ public final class Channel {
             return HashCodeBuilder.reflectionHashCode(this);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return ToStringBuilder.reflectionToString(this);

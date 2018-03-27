@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import io.github.groupease.auth.JwtRequestFilterBindingFeature;
 import io.github.groupease.config.guice.GroupeaseContextListener;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -41,20 +42,21 @@ public class GroupeaseJerseyConfig extends ResourceConfig {
         packages("io.github.groupease");
 
         LOGGER.info("Loading Guice Bridge.");
-
         GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);
         GuiceIntoHK2Bridge guiceBridge = serviceLocator.getService(GuiceIntoHK2Bridge.class);
         guiceBridge.bridgeGuiceInjector(
                 GroupeaseContextListener.getGuiceInjector()
         );
-
         LOGGER.info("Guice Bridge Loaded.");
 
-        /* Register Jackson Module. */
+        LOGGER.info("Registering Jersey Jackson.");
         register(ObjectMapperContextResolver.class);
         register(JacksonJaxbJsonProvider.class);
+        LOGGER.info("Jersey Jackson Registered.");
 
-        LOGGER.info("Jackson Loaded.");
+        LOGGER.info("Registering Jersey JWT Authentication Filter.");
+        register(JwtRequestFilterBindingFeature.class);
+        LOGGER.info("Jersey JWT Authentication Filter Registered.");
 
         LOGGER.info("GroupeaseJerseyConfig Created.");
     }

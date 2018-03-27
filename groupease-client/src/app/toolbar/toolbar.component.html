@@ -1,11 +1,27 @@
 <mat-toolbar color="primary">
 
-  <span class="app-title">
+  <a class="app-title"
+          [routerLink]="['/views/home']"
+          mat-button>
     Groupease
-  </span>
+  </a>
 
-  <button mat-button>
+  <a *ngIf="authService.isAuthenticated()"
+          [routerLink]="['/views/dashboard']"
+          mat-button>
+    Dashboard
+  </a>
+
+  <button *ngIf="!authService.isAuthenticated()"
+          (click)="authService.login()"
+          mat-button>
     Sign in
+  </button>
+
+  <button *ngIf="authService.isAuthenticated()"
+          (click)="authService.logout()"
+          mat-button>
+    Sign out
   </button>
 
 </mat-toolbar>

@@ -2,16 +2,35 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToolbarComponent } from './toolbar.component';
 import {GroupeaseMaterialModule} from '../groupease-material.module';
+import {AuthService} from '../auth/auth.service';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('ToolbarComponent', () => {
   let component: ToolbarComponent;
   let fixture: ComponentFixture<ToolbarComponent>;
 
   beforeEach(async(() => {
+
+    const authService = jasmine.createSpyObj(
+      'AuthService',
+      [
+        'isAuthenticated'
+      ]
+    );
+
     TestBed.configureTestingModule({
-      declarations: [ ToolbarComponent ],
+      declarations: [
+        ToolbarComponent
+      ],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: authService
+        }
+      ],
       imports: [
-        GroupeaseMaterialModule
+        GroupeaseMaterialModule,
+        RouterTestingModule
       ]
     })
     .compileComponents();
@@ -26,4 +45,5 @@ describe('ToolbarComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });
