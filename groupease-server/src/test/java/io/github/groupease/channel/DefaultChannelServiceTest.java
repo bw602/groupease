@@ -27,12 +27,14 @@ public class DefaultChannelServiceTest {
     private Channel channel;
 
     @Inject
-    private ChannelDto channelDto;
+    private Provider<ChannelDto> channelDtoProvider;
 
     @Inject
     private Provider<DefaultChannelService> toTestProvider;
 
     private DefaultChannelService toTest;
+
+    private ChannelDto channelDto;
 
     /**
      * Set up tests.
@@ -43,6 +45,9 @@ public class DefaultChannelServiceTest {
     public void setUp() throws Exception {
         /* Reset all injected mocks between tests. */
         reset(channelDao);
+
+        /* Get new instance of ChannelDto for each test since it is mutable. */
+        channelDto = channelDtoProvider.get();
 
         /* Get instance to test. */
         toTest = toTestProvider.get();
@@ -99,6 +104,7 @@ public class DefaultChannelServiceTest {
         Channel expected = channel;
 
         /* Train the mocks. */
+        when(channelDao.getById(channelDto.getId())).thenReturn(expected);
         when(channelDao.update(channelDto)).thenReturn(expected);
 
         /* Make the call. */
@@ -106,6 +112,59 @@ public class DefaultChannelServiceTest {
 
         /* Verify results. */
         assertEquals(actual, expected);
+    }
+
+    /**
+     * It should throw {@link ChannelNotFoundException} when channel to update is not found.
+     *
+     * @throws Exception on error.
+     */
+    @Test(expectedExceptions = ChannelNotFoundException.class)
+    public void testUpdateWhenNotFound() throws Exception {
+        /* Train the mocks. */
+        when(channelDao.getById(channelDto.getId())).thenThrow(ChannelNotFoundException.class);
+
+        /* Make the call. */
+        toTest.update(channelDto);
+    }
+
+    /**
+     * It should throw {@link NullPointerException} when input is null.
+     *
+     * @throws Exception on error.
+     */
+    @Test(expectedExceptions = NullPointerException.class)
+    public void testUpdateWhenDtoNull() throws Exception {
+        /* Make the call. */
+        toTest.update(null);
+    }
+
+    /**
+     * It should throw {@link ChannelNameMissingException} when name is null.
+     *
+     * @throws Exception on error.
+     */
+    @Test(expectedExceptions = ChannelNameMissingException.class)
+    public void testUpdateWhenNameNull() throws Exception {
+        /* Set up test. */
+        channelDto.setName(null);
+
+        /* Make the call. */
+        toTest.update(channelDto);
+    }
+
+    /**
+     * It should throw {@link ChannelNameMissingException} when name is blank.
+     *
+     * @throws Exception on error.
+     */
+    @Test(expectedExceptions = ChannelNameMissingException.class)
+    public void testUpdateWhenNameBlank() throws Exception {
+        /* Set up test. */
+        channelDto.setName("");
+
+        /* Make the call. */
+        toTest.update(channelDto);
     }
 
     /**
@@ -118,6 +177,8 @@ public class DefaultChannelServiceTest {
         /* Set up test. */
         Channel expected = channel;
 
+        channelDto.setId(null);
+
         /* Train the mocks. */
         when(channelDao.create(channelDto)).thenReturn(expected);
 
@@ -129,17 +190,86 @@ public class DefaultChannelServiceTest {
     }
 
     /**
+     * It should throw {@link NewChannelHasIdException} when channel to create already has an ID.
+     *
+     * @throws Exception on error.
+     */
+    @Test(expectedExceptions = NewChannelHasIdException.class)
+    public void testCreateAlreadyHasId() throws Exception {
+        /* Make the call. */
+        toTest.create(channelDto);
+    }
+
+    /**
+     * It should throw {@link NullPointerException} when input is null.
+     *
+     * @throws Exception on error.
+     */
+    @Test(expectedExceptions = NullPointerException.class)
+    public void testCreateWhenDtoNull() throws Exception {
+        /* Make the call. */
+        toTest.create(null);
+    }
+
+    /**
+     * It should throw {@link ChannelNameMissingException} when name is null.
+     *
+     * @throws Exception on error.
+     */
+    @Test(expectedExceptions = ChannelNameMissingException.class)
+    public void testCreateWhenNameNull() throws Exception {
+        /* Set up test. */
+        channelDto.setId(null);
+        channelDto.setName(null);
+
+        /* Make the call. */
+        toTest.create(channelDto);
+    }
+
+    /**
+     * It should throw {@link ChannelNameMissingException} when name is blank.
+     *
+     * @throws Exception on error.
+     */
+    @Test(expectedExceptions = ChannelNameMissingException.class)
+    public void testCreateWhenNameBlank() throws Exception {
+        /* Set up test. */
+        channelDto.setId(null);
+        channelDto.setName("");
+
+        /* Make the call. */
+        toTest.create(channelDto);
+    }
+
+    /**
      * It should call {@link ChannelDao#delete(long)} with the provided ID.
      *
      * @throws Exception on error.
      */
     @Test
     public void testDelete() throws Exception {
+        /* Train the mocks. */
+        when(channelDao.getById(channelDto.getId())).thenReturn(channel);
+
         /* Make the call. */
         toTest.delete(channel.getId());
 
         /* Verify results. */
         verify(channelDao).delete(channel.getId());
+    }
+
+    /**
+     * It should throw {@link ChannelNotFoundException} when channel to delete is not found.
+     *
+     * @throws Exception on error.
+     */
+    @Test(expectedExceptions = ChannelNotFoundException.class)
+    public void testDeleteWhenNotFound() throws Exception {
+        /* Train the mocks. */
+        when(channelDao.getById(channelDto.getId())).thenThrow(ChannelNotFoundException.class);
+
+        /* Make the call. */
+        toTest.delete(channel.getId());
     }
 
 }

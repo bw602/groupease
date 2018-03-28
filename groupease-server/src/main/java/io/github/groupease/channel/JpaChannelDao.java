@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public class JpaChannelDao implements ChannelDao {
     /**
      * Injectable constructor.
      *
-     * @param entityManager
+     * @param entityManager to talk to the database.
      */
     @Inject
     public JpaChannelDao(
@@ -37,6 +38,7 @@ public class JpaChannelDao implements ChannelDao {
 
     @Nonnull
     @Override
+    @Timed
     public List<Channel> list() {
         LOGGER.debug("JpaChannelDao.list() called.");
 
@@ -60,6 +62,7 @@ public class JpaChannelDao implements ChannelDao {
 
     @Nonnull
     @Override
+    @Timed
     public Channel getById(
             long id
     ) {
@@ -70,12 +73,17 @@ public class JpaChannelDao implements ChannelDao {
                 id
         );
 
+        if (channelDto == null) {
+            throw new ChannelNotFoundException("Channel not found with ID: " + id);
+        }
+
         return Channel.Builder.from(channelDto)
                 .build();
     }
 
     @Nonnull
     @Override
+    @Timed
     public Channel update(
             @Nonnull ChannelDto toUpdate
     ) {
@@ -89,6 +97,7 @@ public class JpaChannelDao implements ChannelDao {
 
     @Nonnull
     @Override
+    @Timed
     public Channel create(
             @Nonnull ChannelDto toCreate
     ) {
@@ -101,6 +110,7 @@ public class JpaChannelDao implements ChannelDao {
     }
 
     @Override
+    @Timed
     public void delete(long id) {
         LOGGER.debug("JpaChannelDao.delete({}) called.", id);
 
@@ -108,6 +118,11 @@ public class JpaChannelDao implements ChannelDao {
                 ChannelDto.class,
                 id
         );
+
+        if (channelDto == null) {
+            throw new ChannelNotFoundException("Channel not found with ID: " + id);
+        }
+
         entityManager.remove(channelDto);
     }
 

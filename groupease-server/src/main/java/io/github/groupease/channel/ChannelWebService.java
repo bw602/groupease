@@ -17,7 +17,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,11 +94,12 @@ public class ChannelWebService {
             @Nonnull ChannelDto toUpdate
     ) {
         LOGGER.debug("ChannelWebService.update({}, {}) called.", id, toUpdate);
-        Preconditions.checkArgument(
-                id.equals(toUpdate.getId()),
-                "ID does not match the ID of the instance to update"
-        );
-        return channelService.update(toUpdate);
+
+        if (id.equals(toUpdate.getId())) {
+            return channelService.update(toUpdate);
+        }
+
+        throw new ChannelIdMismatchException("Provided Channel ID does not match URL ID.");
     }
 
     /**

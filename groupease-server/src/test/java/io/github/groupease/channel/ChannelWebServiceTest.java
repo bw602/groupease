@@ -112,11 +112,11 @@ public class ChannelWebServiceTest {
     }
 
     /**
-     * It should throw {@link IllegalArgumentException} if ID does not match {@link ChannelDto} to update.
+     * It should throw {@link ChannelIdMismatchException} if ID does not match {@link ChannelDto} to update.
      *
      * @throws Exception on error.
      */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = ChannelIdMismatchException.class)
     public void testUpdateIdMismatch() throws Exception {
         /* Make the call. */
         toTest.update(

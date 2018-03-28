@@ -1,12 +1,14 @@
 import {async, TestBed} from '@angular/core/testing';
 import {AppComponent} from './app.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {ToolbarComponent} from './toolbar/toolbar.component';
 import {GroupeaseMaterialModule} from './groupease-material.module';
+import {Component} from '@angular/core';
+
+/* Test stub. */
+@Component({selector: 'app-toolbar', template: ''})
+class ToolbarComponent {}
 
 describe('AppComponent', () => {
-
-  const TITLE = 'Groupease';
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -25,12 +27,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
-  }));
-
-  it(`should have as title 'Groupease'`, async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('Groupease');
   }));
 
   it('should render app-toolbar element', async(() => {
