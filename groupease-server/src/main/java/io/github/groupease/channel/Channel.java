@@ -22,7 +22,6 @@ public final class Channel {
     private long id;
     private String name;
     private String description;
-    private Instant createdOn;
     private Instant lastUpdatedOn;
 
     /**
@@ -47,7 +46,6 @@ public final class Channel {
         this.id = requireNonNull(builder.getId());
         this.name = requireNonNull(builder.getName());
         this.description = Strings.nullToEmpty(builder.getDescription());
-        this.createdOn = requireNonNull(builder.getCreatedOn());
         this.lastUpdatedOn = requireNonNull(builder.getLastUpdatedOn());
     }
 
@@ -63,11 +61,6 @@ public final class Channel {
     @Nonnull
     public String getDescription() {
         return description;
-    }
-
-    @Nonnull
-    public Instant getCreatedOn() {
-        return createdOn;
     }
 
     @Nonnull
@@ -99,7 +92,6 @@ public final class Channel {
         private Long id;
         private String name;
         private String description;
-        private Instant createdOn;
         private Instant lastUpdatedOn;
 
         /**
@@ -118,7 +110,6 @@ public final class Channel {
                     .withId(channel.getId())
                     .withName(channel.getName())
                     .withDescription(channel.getDescription())
-                    .withCreatedOn(channel.getCreatedOn())
                     .withLastUpdatedOn(channel.getLastUpdatedOn());
         }
 
@@ -138,7 +129,6 @@ public final class Channel {
                     .withId(channelDto.getId())
                     .withName(channelDto.getName())
                     .withDescription(channelDto.getDescription())
-                    .withCreatedOn(channelDto.getCreatedOn())
                     .withLastUpdatedOn(channelDto.getLastUpdatedOn());
         }
 
@@ -196,25 +186,6 @@ public final class Channel {
                 @Nullable String description
         ) {
             this.description = description;
-            return this;
-        }
-
-        @Nullable
-        public Instant getCreatedOn() {
-            return createdOn;
-        }
-
-        /**
-         * Sets the createdOn and returns the builder.
-         *
-         * @param createdOn the createdOn to set.
-         * @return the builder.
-         */
-        @Nonnull
-        public Builder withCreatedOn(
-                @Nullable Instant createdOn
-        ) {
-            this.createdOn = createdOn;
             return this;
         }
 

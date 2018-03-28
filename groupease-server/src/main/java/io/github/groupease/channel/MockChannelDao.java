@@ -26,7 +26,6 @@ public class MockChannelDao implements ChannelDao {
                 .withId(id)
                 .withName("Channel Name")
                 .withDescription("Channel Description")
-                .withCreatedOn(Instant.ofEpochMilli(1518000000000L))
                 .withLastUpdatedOn(Instant.ofEpochMilli(1519000000000L))
                 .build();
     }
