@@ -31,6 +31,7 @@ flyway {
 
 /* Migrate DB when stage task runs. */
 task stage() {
+    dependsOn flywayClean
     dependsOn flywayMigrate
 }
 

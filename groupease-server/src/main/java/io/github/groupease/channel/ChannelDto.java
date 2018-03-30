@@ -33,9 +33,6 @@ public class ChannelDto {
 
     private String description;
 
-    @CreationTimestamp
-    private Instant createdOn;
-
     @UpdateTimestamp
     private Instant lastUpdatedOn;
 
@@ -61,14 +58,6 @@ public class ChannelDto {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Instant getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(Instant createdOn) {
-        this.createdOn = createdOn;
     }
 
     public Instant getLastUpdatedOn() {

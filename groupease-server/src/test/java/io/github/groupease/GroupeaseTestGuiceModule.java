@@ -117,7 +117,6 @@ public class GroupeaseTestGuiceModule extends AbstractModule {
         channelDto.setId(12345L);
         channelDto.setName("Channel Name");
         channelDto.setDescription("Channel Description");
-        channelDto.setCreatedOn(Instant.ofEpochMilli(1518000000000L));
         channelDto.setLastUpdatedOn(Instant.ofEpochMilli(1519000000000L));
 
         return channelDto;
