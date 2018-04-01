@@ -219,7 +219,9 @@ public final class Channel {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(
+                @Nullable Object o
+        ) {
             return EqualsBuilder.reflectionEquals(this, o);
         }
 

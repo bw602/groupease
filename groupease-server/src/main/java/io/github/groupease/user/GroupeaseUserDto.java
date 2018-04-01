@@ -1,4 +1,4 @@
-package io.github.groupease.channel;
+package io.github.groupease.user;
 
 import java.time.Instant;
 
@@ -18,21 +18,28 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
- * Data Transfer Object entity for passing {@link Channel} data from client and to/from the database.
+ *  Data Transfer Object entity for passing {@link GroupeaseUser} data from client and to/from the database.
  */
 @Entity
 @Cacheable
-@Table(name = "Channel")
-public class ChannelDto {
+@Table(name = "GroupeaseUser")
+public class GroupeaseUserDto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
+    private String providerUserId;
+
+    private String email;
+
+    @NotNull
     private String name;
 
-    private String description;
+    private String nickname;
+
+    private String pictureUrl;
 
     @UpdateTimestamp
     private Instant lastUpdatedOn;
@@ -49,6 +56,28 @@ public class ChannelDto {
     }
 
     @Nullable
+    public String getProviderUserId() {
+        return providerUserId;
+    }
+
+    public void setProviderUserId(
+            @Nullable String providerUserId
+    ) {
+        this.providerUserId = providerUserId;
+    }
+
+    @Nullable
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(
+            @Nullable String email
+    ) {
+        this.email = email;
+    }
+
+    @Nullable
     public String getName() {
         return name;
     }
@@ -60,14 +89,25 @@ public class ChannelDto {
     }
 
     @Nullable
-    public String getDescription() {
-        return description;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setDescription(
-            @Nullable String description
+    public void setNickname(
+            @Nullable String nickname
     ) {
-        this.description = description;
+        this.nickname = nickname;
+    }
+
+    @Nullable
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(
+            @Nullable String pictureUrl
+    ) {
+        this.pictureUrl = pictureUrl;
     }
 
     @Nullable

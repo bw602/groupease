@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name="UserProfile")
-public class UserProfile
+public class LegacyUserProfileToDelete
 {
     @Id
     private Long id;
@@ -28,7 +28,7 @@ public class UserProfile
     @OneToMany(mappedBy = "userProfile")
     private List<Member> memberList;
 /*
-    public UserProfile(Long id, String authId, String name, String nickName, String email, String photoUrl, Instant lastUpdate) {
+    public LegacyUserProfileToDelete(Long id, String authId, String name, String nickName, String email, String photoUrl, Instant lastUpdate) {
         this.id = id;
         this.authId = authId;
         this.name = name;
