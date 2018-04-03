@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
-import {UserService} from '../user.service';
 import 'rxjs/add/operator/take';
+import { UserService } from '../core/user.service';
 
 @Injectable()
 export class AuthService {
