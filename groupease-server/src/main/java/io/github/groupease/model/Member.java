@@ -24,7 +24,7 @@ public class Member implements Serializable
 
     @ManyToOne
     @JoinColumn(name = "UserID", referencedColumnName = "ID")
-    private UserProfile userProfile;
+    private LegacyUserProfileToDelete userProfile;
 
     @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
     private List<Group> groups;
@@ -33,7 +33,7 @@ public class Member implements Serializable
     public Long getId() { return id; }
     public boolean isOwner() { return isOwner; }
 
-    public UserProfile getUserProfile() {
+    public LegacyUserProfileToDelete getUserProfile() {
         return userProfile;
     }
 

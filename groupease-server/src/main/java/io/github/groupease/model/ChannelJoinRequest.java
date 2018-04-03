@@ -12,7 +12,7 @@ public class ChannelJoinRequest {
 
     @ManyToOne
     @JoinColumn(name = "UserID", referencedColumnName = "ID")
-    private UserProfile requestor;
+    private LegacyUserProfileToDelete requestor;
 
     private String comments;
 

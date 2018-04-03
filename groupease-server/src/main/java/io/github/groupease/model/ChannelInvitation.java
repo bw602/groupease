@@ -16,7 +16,7 @@ public class ChannelInvitation {
 
     @ManyToOne
     @JoinColumn(name = "RecipientID", referencedColumnName = "ID")
-    private UserProfile recipient;
+    private LegacyUserProfileToDelete recipient;
 
     private String comments;
 

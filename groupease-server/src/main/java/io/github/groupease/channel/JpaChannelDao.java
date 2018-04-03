@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -18,6 +19,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * JPA implementation of {@link ChannelDao}.
  */
+@Immutable
 public class JpaChannelDao implements ChannelDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
