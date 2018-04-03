@@ -93,6 +93,10 @@ public class JpaChannelDao implements ChannelDao {
 
         ChannelDto channelDto = entityManager.merge(toUpdate);
 
+        /* Refresh instance. */
+        entityManager.flush();
+        entityManager.refresh(channelDto);
+
         return Channel.Builder.from(channelDto)
                 .build();
     }
@@ -106,6 +110,10 @@ public class JpaChannelDao implements ChannelDao {
         LOGGER.debug("JpaChannelDao.create({}) called.", toCreate);
 
         entityManager.persist(toCreate);
+
+        /* Refresh instance. */
+        entityManager.flush();
+        entityManager.refresh(toCreate);
 
         return Channel.Builder.from(toCreate)
                 .build();

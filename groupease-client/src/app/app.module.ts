@@ -12,6 +12,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import {HttpClientModule} from '@angular/common/http';
 import { ChannelService } from './channel.service';
 import { AuthService } from './auth/auth.service';
+import {UserService} from './user.service';
 
 @NgModule({
   declarations: [
@@ -29,8 +30,9 @@ import { AuthService } from './auth/auth.service';
     HttpClientModule
   ],
   providers: [
+    AuthService,
     ChannelService,
-    AuthService
+    UserService
   ],
   bootstrap: [
     AppComponent
