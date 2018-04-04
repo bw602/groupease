@@ -115,7 +115,12 @@ public class JpaUserDao implements UserDao {
             LOGGER.debug("No existing user found. Saving new user: {}", toSave);
         }
 
+        /* Save changes. */
         GroupeaseUserDto groupeaseUserDto = entityManager.merge(toSave);
+
+        /* Refresh instance. */
+        entityManager.flush();
+        entityManager.refresh(groupeaseUserDto);
 
         LOGGER.debug("Saved user: {}", groupeaseUserDto);
 
