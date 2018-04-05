@@ -14,6 +14,7 @@ import io.github.groupease.exception.*;
 import io.github.groupease.model.Group;
 import io.github.groupease.model.Member;
 import io.github.groupease.model.GroupeaseUser;
+import io.github.groupease.user.UserNotFoundException;
 import io.github.groupease.util.GroupCreateWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -216,7 +217,7 @@ public class GroupWebService {
             // No profile for the user was found in the database so can't possibly be a channel member
             // Throwing specific user not found exception. Should consider whether it would just be better
             // to create a profile and then throwing the more general not channel member exception
-            throw new GroupeaseUserNotFoundException("There is no profile found for the current user");
+            throw new UserNotFoundException("There is no profile found for the current user");
         }
 
         if(currentUser.getMemberList().stream().noneMatch(member -> member.getChannel().getId() == channelId))

@@ -2,6 +2,7 @@ package io.github.groupease.restendpoint;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.groupease.auth.CurrentUserId;
+import io.github.groupease.user.UserNotFoundException;
 import io.github.groupease.db.ChannelJoinRequestDao;
 import io.github.groupease.db.DataAccess;
 import io.github.groupease.exception.*;
@@ -124,7 +125,7 @@ public class ChannelJoinRequestService
         GroupeaseUser profile = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
         if(profile == null)
         {
-            throw new GroupeaseUserNotFoundException();
+            throw new UserNotFoundException();
         }
 
         // Check if an existing join request for this user and channel already exists
@@ -235,7 +236,7 @@ public class ChannelJoinRequestService
             GroupeaseUser currentUser = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
             if(currentUser == null)
             {
-                throw new GroupeaseUserNotFoundException("Currently logged in user has no profile");
+                throw new UserNotFoundException("Currently logged in user has no profile");
             }
             if(request.getRequestor().getId().equals(currentUser.getId())) {
                 throw new NotSenderException();
@@ -253,7 +254,7 @@ public class ChannelJoinRequestService
         GroupeaseUser currentUser = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
         if(currentUser == null)
         {
-            throw new GroupeaseUserNotFoundException("Currently logged in user has no profile");
+            throw new UserNotFoundException("Currently logged in user has no profile");
         }
 
         return  currentUser.getMemberList().stream()

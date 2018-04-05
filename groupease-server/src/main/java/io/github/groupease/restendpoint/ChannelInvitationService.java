@@ -2,13 +2,13 @@ package io.github.groupease.restendpoint;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.groupease.auth.CurrentUserId;
+import io.github.groupease.user.UserNotFoundException;
 import io.github.groupease.db.DataAccess;
 import io.github.groupease.exception.*;
 import io.github.groupease.model.Channel;
 import io.github.groupease.model.ChannelInvitation;
 import io.github.groupease.model.Member;
 import io.github.groupease.model.GroupeaseUser;
-import io.github.groupease.user.retrieval.UserRetrievalService;
 import io.github.groupease.util.ChannelInvitationCreateWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +108,7 @@ public class ChannelInvitationService {
         GroupeaseUser recipientProfile = dataAccess.userProfile().getById(wrapper.recipient.id);
         if(recipientProfile == null)
         {
-            throw new GroupeaseUserNotFoundException();
+            throw new UserNotFoundException();
         }
 
         // Check that the recipient hasn't already received an invitation to this channel
@@ -221,7 +221,7 @@ public class ChannelInvitationService {
             if(loggedOnUser == null)
             {
                 LOGGER.debug("verifyLoggedInUser({}): No profile for logged on user in database", userId);
-                throw new GroupeaseUserNotFoundException("Currently logged in user has no profile");
+                throw new UserNotFoundException("Currently logged in user has no profile");
             }
         }
         if(loggedOnUser.getId() != userId)
