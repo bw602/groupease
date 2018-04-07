@@ -85,7 +85,7 @@ public class ChannelJoinRequestService
         ChannelJoinRequest request = requestDao.getById(requestId);
         if(request == null || request.getChannelId() != channelId)
         {
-            throw new ChannelJoinRequestNotFound();
+            throw new ChannelJoinRequestNotFoundException();
         }
 
         // Verify the logged in user has permission to see this request
@@ -164,7 +164,7 @@ public class ChannelJoinRequestService
         ChannelJoinRequest request = requestDao.getById(requestId);
         if(request == null || request.getChannelId() != channelId)
         {
-            throw new ChannelJoinRequestNotFound();
+            throw new ChannelJoinRequestNotFoundException();
         }
 
         // User must be a channel owner to accept
@@ -200,7 +200,7 @@ public class ChannelJoinRequestService
         ChannelJoinRequest request = requestDao.getById(requestId);
         if(request == null || request.getChannelId() != channelId)
         {
-            throw new ChannelJoinRequestNotFound();
+            throw new ChannelJoinRequestNotFoundException();
         }
 
         // User must be a channel owner to reject
@@ -246,7 +246,7 @@ public class ChannelJoinRequestService
         }
 
         LOGGER.debug("ChannelJoinRequestService.delete: Didn't find request to delete");
-        throw new ChannelJoinRequestNotFound();
+        throw new ChannelJoinRequestNotFoundException();
     }
 
     private boolean isChannelOwner(long channelId)

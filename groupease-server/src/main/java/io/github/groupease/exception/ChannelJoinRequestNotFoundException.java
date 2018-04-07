@@ -2,13 +2,13 @@ package io.github.groupease.exception;
 
 import javax.annotation.Nullable;
 
-public class ChannelInvitationNotFound extends ResourceNotFoundException {
+public class ChannelJoinRequestNotFoundException extends ResourceNotFoundException {
     /**
      * Constructs a new runtime exception with {@code null} as its
      * detail message.  The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause}.
      */
-    public ChannelInvitationNotFound() {
+    public ChannelJoinRequestNotFoundException() {
     }
 
     /**
@@ -19,7 +19,7 @@ public class ChannelInvitationNotFound extends ResourceNotFoundException {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public ChannelInvitationNotFound(@Nullable String message) {
+    public ChannelJoinRequestNotFoundException(@Nullable String message) {
         super(message);
     }
 
@@ -37,7 +37,7 @@ public class ChannelInvitationNotFound extends ResourceNotFoundException {
      *                unknown.)
      * @since 1.4
      */
-    public ChannelInvitationNotFound(@Nullable String message, @Nullable Throwable cause) {
+    public ChannelJoinRequestNotFoundException(@Nullable String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 
@@ -54,7 +54,7 @@ public class ChannelInvitationNotFound extends ResourceNotFoundException {
      *              unknown.)
      * @since 1.4
      */
-    public ChannelInvitationNotFound(@Nullable Throwable cause) {
+    public ChannelJoinRequestNotFoundException(@Nullable Throwable cause) {
         super(cause);
     }
 
@@ -72,7 +72,7 @@ public class ChannelInvitationNotFound extends ResourceNotFoundException {
      *                           be writable
      * @since 1.7
      */
-    public ChannelInvitationNotFound(@Nullable String message, @Nullable Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ChannelJoinRequestNotFoundException(@Nullable String message, @Nullable Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

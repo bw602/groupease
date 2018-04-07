@@ -71,7 +71,7 @@ public class ChannelInvitationService {
         ChannelInvitation result = dataAccess.channelInvitation().getByInvitationId(invitationId);
         if(result == null || result.getRecipient().getId() != userId)
         {
-            throw new ChannelInvitationNotFound();
+            throw new ChannelInvitationNotFoundException();
         }
 
         return result;
@@ -150,7 +150,7 @@ public class ChannelInvitationService {
         ChannelInvitation invitation = dataAccess.channelInvitation().getByInvitationId(invitationId);
         if(invitation == null || invitation.getRecipient().getId() != userId)
         {
-            throw new ChannelInvitationNotFound();
+            throw new ChannelInvitationNotFoundException();
         }
 
         // Create the new channel member
@@ -178,7 +178,7 @@ public class ChannelInvitationService {
         ChannelInvitation invitation = dataAccess.channelInvitation().getByInvitationId(invitationId);
         if(invitation == null || invitation.getRecipient().getId() != userId)
         {
-            throw new ChannelInvitationNotFound();
+            throw new ChannelInvitationNotFoundException();
         }
 
         // Clean up the invitation
@@ -201,7 +201,7 @@ public class ChannelInvitationService {
         ChannelInvitation invitation = dataAccess.channelInvitation().getByInvitationId(invitationId);
         if(invitation == null)
         {
-            throw new ChannelInvitationNotFound();
+            throw new ChannelInvitationNotFoundException();
         }
 
         // The calling user must be an owner of the channel that the invitation is for
