@@ -1,5 +1,6 @@
 package io.github.groupease.db;
 
+import com.google.inject.persist.Transactional;
 import io.github.groupease.model.ChannelJoinRequest;
 import io.github.groupease.model.GroupeaseUser;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ public class ChannelJoinRequestDao
      * @param comments Free text comments supplied by the user for the channel owners to read
      * @return The newly created join request including assigned unique ID
      */
+    @Transactional
     public ChannelJoinRequest create(long channelId, long userId, String comments) {
         LOGGER.debug("ChannelJoinRequestDao.create(channel={}, user={})", channelId, userId);
 
@@ -133,14 +135,11 @@ public class ChannelJoinRequestDao
      * Removes a {@link ChannelJoinRequest} from the database
      * @param request The join request to remove. It must have previously been retrieved, not manually constructed
      */
+    @Transactional
     public void delete(@Nonnull ChannelJoinRequest request)
     {
         LOGGER.debug("ChannelJoinRequestDao.delete()");
 
-        //EntityTransaction trans = entityManager.getTransaction();
-        //trans.begin();
         entityManager.remove(request);
-        //entityManager.flush();
-        //trans.commit();
     }
 }

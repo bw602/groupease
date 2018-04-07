@@ -3,8 +3,10 @@ package io.github.groupease.restendpoint;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import io.github.groupease.auth.CurrentUserId;
+import io.github.groupease.db.ChannelInvitationDao;
+import io.github.groupease.db.GroupeaseUserDao;
+import io.github.groupease.db.MemberDao;
 import io.github.groupease.user.UserNotFoundException;
-import io.github.groupease.db.DataAccess;
 import io.github.groupease.exception.*;
 import io.github.groupease.model.Channel;
 import io.github.groupease.model.ChannelInvitation;
@@ -26,16 +28,21 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class ChannelInvitationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final DataAccess dataAccess;
     private final Provider<String> currentUserIdProvider;
+    private final ChannelInvitationDao invitationDao;
+    private final GroupeaseUserDao userDao;
+    private final MemberDao memberDao;
     private GroupeaseUser loggedOnUser;
 
     @Inject
-    public ChannelInvitationService(@Nonnull DataAccess dataAccessObject,
+    public ChannelInvitationService(@Nonnull ChannelInvitationDao invitationDao,
+                                    @Nonnull GroupeaseUserDao userDao, @Nonnull MemberDao memberDao,
                                     @Nonnull @CurrentUserId Provider<String> currentUserIdProvider)
     {
-        dataAccess = dataAccessObject;
         this.currentUserIdProvider = currentUserIdProvider;
+        this.invitationDao = invitationDao;
+        this.userDao = userDao;
+        this.memberDao = memberDao;
     }
 
     /**
@@ -51,7 +58,7 @@ public class ChannelInvitationService {
 
         verifyLoggedInUser(userId);
 
-        return dataAccess.channelInvitation().listByUserId(userId);
+        return invitationDao.listByUserId(userId);
     }
 
     /**
@@ -69,10 +76,10 @@ public class ChannelInvitationService {
 
         verifyLoggedInUser(userId);
 
-        ChannelInvitation result = dataAccess.channelInvitation().getByInvitationId(invitationId);
+        ChannelInvitation result = invitationDao.getByInvitationId(invitationId);
         if(result == null || result.getRecipient().getId() != userId)
         {
-            throw new ChannelInvitationNotFound();
+            throw new ChannelInvitationNotFoundException();
         }
 
         return result;
@@ -89,6 +96,7 @@ public class ChannelInvitationService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed
+    @Transactional
     public ChannelInvitation create(@PathParam("userId") long userId, @Nonnull ChannelInvitationCreateWrapper wrapper)
     {
         LOGGER.debug("ChannelInvitationService.create(userUrl={}, userWrapper={}, channel={})",
@@ -106,7 +114,7 @@ public class ChannelInvitationService {
         }
 
         // Verify that the recipient exists
-        GroupeaseUser recipientProfile = dataAccess.userProfile().getById(wrapper.recipient.id);
+        GroupeaseUser recipientProfile = userDao.getById(wrapper.recipient.id);
         if(recipientProfile == null)
         {
             throw new UserNotFoundException();
@@ -114,7 +122,7 @@ public class ChannelInvitationService {
 
         // Check that the recipient hasn't already received an invitation to this channel
         List<ChannelInvitation> invitations =
-                dataAccess.channelInvitation().listByUserAndChannel(userId, wrapper.channel.id);
+                invitationDao.listByUserAndChannel(userId, wrapper.channel.id);
         if(!invitations.isEmpty())
         {
             // If there is already an invitation, don't create another one. Return the existing one as a reminder
@@ -128,7 +136,7 @@ public class ChannelInvitationService {
             throw new AlreadyMemberException("Cannot invite a user to a channel the user is already a member of");
         }
 
-        return dataAccess.channelInvitation()
+        return invitationDao
                 .create(loggedOnUser.getId(), recipientProfile.getId(), wrapper.channel.id);
     }
 
@@ -141,7 +149,7 @@ public class ChannelInvitationService {
     @POST
     @Path("{invitationId}/acceptance")
     @Timed
-    //@Transactional
+    @Transactional
     public void accept(@PathParam("userId") long userId, @PathParam("invitationId") long invitationId)
     {
         LOGGER.debug("ChannelInvitationService.accept({})", invitationId);
@@ -149,19 +157,17 @@ public class ChannelInvitationService {
         verifyLoggedInUser(userId);
 
         // Check that the invitation exists and verify the invitation is for this user
-        ChannelInvitation invitation = dataAccess.channelInvitation().getByInvitationId(invitationId);
+        ChannelInvitation invitation = invitationDao.getByInvitationId(invitationId);
         if(invitation == null || invitation.getRecipient().getId() != userId)
         {
-            throw new ChannelInvitationNotFound();
+            throw new ChannelInvitationNotFoundException();
         }
 
         // Create the new channel member
-        dataAccess.beginTransaction();
-        dataAccess.member().create(invitation.getRecipient(), invitation.getChannel());
+        memberDao.create(invitation.getRecipient(), invitation.getChannel());
 
         // Clean up the invitation
-        dataAccess.channelInvitation().delete(invitation);
-        dataAccess.commitTransaction();
+        invitationDao.delete(invitation);
     }
 
     /**
@@ -172,6 +178,7 @@ public class ChannelInvitationService {
     @POST
     @Path("{invitationId}/rejection")
     @Timed
+    @Transactional
     public void reject(@PathParam("userId") long userId, @PathParam("invitationId") long invitationId)
     {
         LOGGER.debug("ChannelInvitationService.reject({})", invitationId);
@@ -179,16 +186,14 @@ public class ChannelInvitationService {
         verifyLoggedInUser(userId);
 
         // Check that the invitation exists and verify the invitation is for this user
-        ChannelInvitation invitation = dataAccess.channelInvitation().getByInvitationId(invitationId);
+        ChannelInvitation invitation = invitationDao.getByInvitationId(invitationId);
         if(invitation == null || invitation.getRecipient().getId() != userId)
         {
-            throw new ChannelInvitationNotFound();
+            throw new ChannelInvitationNotFoundException();
         }
 
         // Clean up the invitation
-        dataAccess.beginTransaction();
-        dataAccess.channelInvitation().delete(invitation);
-        dataAccess.commitTransaction();
+        invitationDao.delete(invitation);
     }
 
     /**
@@ -199,15 +204,16 @@ public class ChannelInvitationService {
     @DELETE
     @Path("{invitationId}")
     @Timed
+    @Transactional
     public void delete(@PathParam("userId") long userId, @PathParam("invitationId") long invitationId)
     {
         LOGGER.debug("ChannelInvitationService.delete(user={}, invitation={})", userId, invitationId);
 
         // Make sure this invitation actually exists
-        ChannelInvitation invitation = dataAccess.channelInvitation().getByInvitationId(invitationId);
+        ChannelInvitation invitation = invitationDao.getByInvitationId(invitationId);
         if(invitation == null)
         {
-            throw new ChannelInvitationNotFound();
+            throw new ChannelInvitationNotFoundException();
         }
 
         // The calling user must be an owner of the channel that the invitation is for
@@ -216,16 +222,14 @@ public class ChannelInvitationService {
             throw new NotChannelOwnerException();
         }
 
-        dataAccess.beginTransaction();
-        dataAccess.channelInvitation().delete(invitation);
-        dataAccess.commitTransaction();
+        invitationDao.delete(invitation);
     }
 
     private void verifyLoggedInUser(@PathParam("userId") long userId)
     {
         if(loggedOnUser == null)
         {
-            loggedOnUser = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
+            loggedOnUser = userDao.getByProviderId(currentUserIdProvider.get());
             if(loggedOnUser == null)
             {
                 LOGGER.debug("verifyLoggedInUser({}): No profile for logged on user in database", userId);
@@ -246,7 +250,7 @@ public class ChannelInvitationService {
     private boolean isChannelOwner(long channelId)
     {
         if(loggedOnUser == null) {
-            loggedOnUser = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
+            loggedOnUser = userDao.getByProviderId(currentUserIdProvider.get());
         }
 
         return loggedOnUser.getMemberList().stream()
