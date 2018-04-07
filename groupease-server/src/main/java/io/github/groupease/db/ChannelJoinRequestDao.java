@@ -137,10 +137,10 @@ public class ChannelJoinRequestDao
     {
         LOGGER.debug("ChannelJoinRequestDao.delete()");
 
-        EntityTransaction trans = entityManager.getTransaction();
-        trans.begin();
+        //EntityTransaction trans = entityManager.getTransaction();
+        //trans.begin();
         entityManager.remove(request);
-        entityManager.flush();
-        trans.commit();
+        //entityManager.flush();
+        //trans.commit();
     }
 }

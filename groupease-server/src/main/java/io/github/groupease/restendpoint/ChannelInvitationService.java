@@ -1,6 +1,7 @@
 package io.github.groupease.restendpoint;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.inject.persist.Transactional;
 import io.github.groupease.auth.CurrentUserId;
 import io.github.groupease.user.UserNotFoundException;
 import io.github.groupease.db.DataAccess;
@@ -140,6 +141,7 @@ public class ChannelInvitationService {
     @POST
     @Path("{invitationId}/acceptance")
     @Timed
+    //@Transactional
     public void accept(@PathParam("userId") long userId, @PathParam("invitationId") long invitationId)
     {
         LOGGER.debug("ChannelInvitationService.accept({})", invitationId);
@@ -154,10 +156,12 @@ public class ChannelInvitationService {
         }
 
         // Create the new channel member
+        dataAccess.beginTransaction();
         dataAccess.member().create(invitation.getRecipient(), invitation.getChannel());
 
         // Clean up the invitation
         dataAccess.channelInvitation().delete(invitation);
+        dataAccess.commitTransaction();
     }
 
     /**
@@ -182,7 +186,9 @@ public class ChannelInvitationService {
         }
 
         // Clean up the invitation
+        dataAccess.beginTransaction();
         dataAccess.channelInvitation().delete(invitation);
+        dataAccess.commitTransaction();
     }
 
     /**
@@ -210,7 +216,9 @@ public class ChannelInvitationService {
             throw new NotChannelOwnerException();
         }
 
+        dataAccess.beginTransaction();
         dataAccess.channelInvitation().delete(invitation);
+        dataAccess.commitTransaction();
     }
 
     private void verifyLoggedInUser(@PathParam("userId") long userId)

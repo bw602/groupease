@@ -26,7 +26,6 @@ import io.github.groupease.util.CommentWrapper;
 public class ChannelJoinRequestService
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final ChannelJoinRequestDao requestDao;
     private final DataAccess dataAccess;
     private final Provider<String> currentUserIdProvider;
 
@@ -35,7 +34,6 @@ public class ChannelJoinRequestService
                                      @Nonnull @CurrentUserId Provider<String> currentUserIdProvider)
     {
         dataAccess = dataAccessObject;
-        this.requestDao = dataAccessObject.channelJoinRequest();
         this.currentUserIdProvider = currentUserIdProvider;
     }
 
@@ -56,13 +54,13 @@ public class ChannelJoinRequestService
         if(isChannelOwner(channelId))
         {
             // When the user is a channel owner, return all requests
-            return requestDao.listInChannel(channelId);
+            return dataAccess.channelJoinRequest().listInChannel(channelId);
         }
         else
         {
             // Return only a request from this user
             GroupeaseUser userProfile = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
-            return requestDao.listInChannel(channelId, userProfile);
+            return dataAccess.channelJoinRequest().listInChannel(channelId, userProfile);
         }
     }
 
@@ -82,7 +80,7 @@ public class ChannelJoinRequestService
 
         // Retrieve the request by ID and make sure that the requested ID is from the same channel
         // Indicated in the URL
-        ChannelJoinRequest request = requestDao.getById(requestId);
+        ChannelJoinRequest request = dataAccess.channelJoinRequest().getById(requestId);
         if(request == null || request.getChannelId() != channelId)
         {
             throw new ChannelJoinRequestNotFound();
@@ -129,7 +127,7 @@ public class ChannelJoinRequestService
         }
 
         // Check if an existing join request for this user and channel already exists
-        ChannelJoinRequest existing = requestDao.getForUser(channelId, profile.getId());
+        ChannelJoinRequest existing = dataAccess.channelJoinRequest().getForUser(channelId, profile.getId());
         if(existing != null)
         {
             // The user already has a join request for this channel, so don't allow another to be created
@@ -144,7 +142,7 @@ public class ChannelJoinRequestService
         }
 
         // No existing join request in this channel for this user, so create one and return it
-        return requestDao.create(channelId, profile.getId(), wrapper.comments);
+        return dataAccess.channelJoinRequest().create(channelId, profile.getId(), wrapper.comments);
     }
 
     /**
@@ -161,7 +159,7 @@ public class ChannelJoinRequestService
         LOGGER.debug("ChannelJoinRequestService.accept(channel={}, request={})", channelId, requestId);
 
         // Find the request and validate that the request is really for this channel
-        ChannelJoinRequest request = requestDao.getById(requestId);
+        ChannelJoinRequest request = dataAccess.channelJoinRequest().getById(requestId);
         if(request == null || request.getChannelId() != channelId)
         {
             throw new ChannelJoinRequestNotFound();
@@ -174,14 +172,12 @@ public class ChannelJoinRequestService
         }
 
         // Current user is a channel owner so create a new member object
+        dataAccess.beginTransaction();
         Member newMember = dataAccess.member().create(request.getRequestor(), request.getChannel());
-        if(newMember == null)
-        {
-            throw new ServerErrorException("Failed to create the new member record", 500);
-        }
 
         // Now that it's confirmed that the user is now a member of the channel, we can cleanup the request
-        requestDao.delete(request);
+        dataAccess.channelJoinRequest().delete(request);
+        dataAccess.commitTransaction();
     }
 
     /**
@@ -197,7 +193,7 @@ public class ChannelJoinRequestService
         LOGGER.debug("ChannelJoinRequestService.reject(channel={}, request={})", channelId, requestId);
 
         // Find the request and validate that the request is really for this channel
-        ChannelJoinRequest request = requestDao.getById(requestId);
+        ChannelJoinRequest request = dataAccess.channelJoinRequest().getById(requestId);
         if(request == null || request.getChannelId() != channelId)
         {
             throw new ChannelJoinRequestNotFound();
@@ -212,7 +208,9 @@ public class ChannelJoinRequestService
         // At least for now, reject is a delete (no status field etc. recording the change)
         // In the future, maybe send an email? (Would require recording opt-in to receive email
         // plus needing an SMTP gateway)
-        requestDao.delete(request);
+        dataAccess.beginTransaction();
+        dataAccess.channelJoinRequest().delete(request);
+        dataAccess.commitTransaction();
     }
 
     /**
@@ -230,7 +228,7 @@ public class ChannelJoinRequestService
         // Only the creator of the join request can delete it
         // Channel owners must accept or reject
 
-        ChannelJoinRequest request = requestDao.getById(requestId);
+        ChannelJoinRequest request = dataAccess.channelJoinRequest().getById(requestId);
         if(request != null)
         {
             GroupeaseUser currentUser = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
@@ -241,7 +239,9 @@ public class ChannelJoinRequestService
             if(request.getRequestor().getId().equals(currentUser.getId())) {
                 throw new NotSenderException();
             }
-            requestDao.delete(request);
+            dataAccess.beginTransaction();
+            dataAccess.channelJoinRequest().delete(request);
+            dataAccess.commitTransaction();
             return;
         }
 

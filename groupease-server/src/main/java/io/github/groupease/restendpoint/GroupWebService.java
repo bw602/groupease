@@ -146,7 +146,7 @@ public class GroupWebService {
     public Group update(@PathParam("channelId") long channelId, @PathParam("groupId") long groupId,
                         @Nonnull GroupCreateWrapper updateGroup)
     {
-        LOGGER.debug("GroupWebService.update(channelUrl={}, name=)", channelId, updateGroup.name);
+        LOGGER.debug("GroupWebService.update(channelUrl={}, name={})", channelId, updateGroup.name);
 
         // Make sure that caller is a member of channel
         verifyCurrentUserIsChannelMember(channelId);
@@ -199,10 +199,10 @@ public class GroupWebService {
         }
 
         // Update the group
-        dataAccess.group().beginUpdate();
+        dataAccess.beginTransaction();
         existingGroup.setName(updateGroup.name);
         existingGroup.setDescription(updateGroup.description);
-        dataAccess.group().commitUpdate();
+        dataAccess.commitTransaction();
 
         return existingGroup;
     }

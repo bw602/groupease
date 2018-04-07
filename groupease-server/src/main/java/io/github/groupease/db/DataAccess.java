@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.lang.invoke.MethodHandles;
 
 import static java.util.Objects.requireNonNull;
@@ -22,6 +23,7 @@ public class DataAccess
     private GroupJoinRequestDao groupJoinRequestDao;
     private MemberDao memberDao;
     private GroupeaseUserDao userProfileDao;
+    private EntityTransaction entityTransaction;
 
     /**
      * Injectable constructor.
@@ -32,6 +34,18 @@ public class DataAccess
     public DataAccess(@Nonnull EntityManager entityManager)
     {
         this.entityManager = requireNonNull(entityManager);
+    }
+
+    public void beginTransaction()
+    {
+        entityTransaction = entityManager.getTransaction();
+        entityTransaction.begin();
+    }
+
+    public void commitTransaction()
+    {
+        entityManager.flush();
+        entityTransaction.commit();
     }
 
     public ChannelInvitationDao channelInvitation()

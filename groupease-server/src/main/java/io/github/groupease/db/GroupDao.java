@@ -93,11 +93,11 @@ public class GroupDao {
     {
         LOGGER.debug("GroupDao.delete({}) called", group.getName());
 
-        EntityTransaction et = entityManager.getTransaction();
-        et.begin();
+        //EntityTransaction et = entityManager.getTransaction();
+        //et.begin();
         entityManager.remove(group);
-        entityManager.flush();
-        et.commit();
+        //entityManager.flush();
+        //et.commit();
     }
 
     /**
@@ -113,29 +113,30 @@ public class GroupDao {
 
         Group newGroup = new Group(channelId, name, description);
 
-        beginUpdate();
+        //beginUpdate();
         newGroup.getMembers().add(firstMember);
         entityManager.persist(newGroup);
-        commitUpdate();
+        //commitUpdate();
 
         return newGroup;
     }
 
-    /**
+    /*
      * Starts an update transaction. Changes to a previously retrieved {@link Group} will be tracked from this
      * call going forward
-     */
+     /
     public void beginUpdate()
     {
         updateTransaction = entityManager.getTransaction();
         updateTransaction.begin();
     }
 
-    /**
+    /*
      * Commits an update transaction started by a previous call to beginUpdate
-     */
+     *
     public void commitUpdate()
     {
         updateTransaction.commit();
     }
+    */
 }

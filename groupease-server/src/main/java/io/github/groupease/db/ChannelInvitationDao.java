@@ -112,10 +112,10 @@ public class ChannelInvitationDao
     {
         LOGGER.debug("ChannelInvitationDao.delete({})", invitation.getId());
 
-        EntityTransaction et = entityManager.getTransaction();
-        et.begin();
+        //EntityTransaction et = entityManager.getTransaction();
+        //et.begin();
         entityManager.remove(invitation);
-        entityManager.flush();
-        et.commit();
+        //entityManager.flush();
+        //et.commit();
     }
 }
