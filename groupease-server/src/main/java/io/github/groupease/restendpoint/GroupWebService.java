@@ -9,7 +9,8 @@ import com.codahale.metrics.annotation.Timed;
 import javax.inject.Inject;
 
 import io.github.groupease.auth.CurrentUserId;
-import io.github.groupease.db.DataAccess;
+import io.github.groupease.db.GroupDao;
+import io.github.groupease.db.GroupeaseUserDao;
 import io.github.groupease.exception.*;
 import io.github.groupease.model.Group;
 import io.github.groupease.model.Member;
@@ -30,15 +31,17 @@ import java.util.List;
 public class GroupWebService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final DataAccess dataAccess;
+    private final GroupDao groupDao;
+    private final GroupeaseUserDao userDao;
     private final Provider<String> currentUserIdProvider;
     private GroupeaseUser currentUser;
 
     @Inject
-    public GroupWebService(@Nonnull DataAccess dataAccess,
+    public GroupWebService(@Nonnull GroupDao groupDao, @Nonnull GroupeaseUserDao userDao,
                            @Nonnull @CurrentUserId Provider<String> currentUserIdProvider)
     {
-        this.dataAccess = dataAccess;
+        this.groupDao = groupDao;
+        this.userDao = userDao;
         this.currentUserIdProvider = currentUserIdProvider;
     }
 
@@ -57,7 +60,7 @@ public class GroupWebService {
         // Make sure that caller is a member of channel
         verifyCurrentUserIsChannelMember(channelId);
 
-        return dataAccess.group().list(channelId);
+        return groupDao.list(channelId);
     }
 
     /**
@@ -78,7 +81,7 @@ public class GroupWebService {
         verifyCurrentUserIsChannelMember(channelId);
 
         // Get the group from the database. Verify that it belongs to the specified channel before returning it
-        Group group = dataAccess.group().get(groupId);
+        Group group = groupDao.get(groupId);
         if(group == null || group.getChannelId() != channelId)
         {
             throw new GroupNotFoundException();
@@ -121,7 +124,7 @@ public class GroupWebService {
         }
 
         // Check if a group with this name already exists in the channel
-        if(dataAccess.group().get(newGroup.name, channelId) != null)
+        if(groupDao.get(newGroup.name, channelId) != null)
         {
             throw new GroupNameConflictException();
         }
@@ -130,7 +133,7 @@ public class GroupWebService {
         Member currentUserMember = currentUser.getMemberList().stream()
                 .filter(member -> member.getChannel().getId() == channelId).findFirst().get();
 
-        return dataAccess.group().create(channelId, newGroup.name, newGroup.description, currentUserMember);
+        return groupDao.create(channelId, newGroup.name, newGroup.description, currentUserMember);
     }
 
     /**
@@ -179,13 +182,13 @@ public class GroupWebService {
         }
 
         // Check if a group with this new name already exists in the channel
-        if(dataAccess.group().get(updateGroup.name, channelId) != null)
+        if(groupDao.get(updateGroup.name, channelId) != null)
         {
             throw new GroupNameConflictException();
         }
 
         // Get the existing group
-        Group existingGroup = dataAccess.group().get(updateGroup.id);
+        Group existingGroup = groupDao.get(updateGroup.id);
         if(existingGroup == null)
         {
             throw new GroupNotFoundException();
@@ -199,10 +202,8 @@ public class GroupWebService {
         }
 
         // Update the group
-        dataAccess.group().beginUpdate();
         existingGroup.setName(updateGroup.name);
         existingGroup.setDescription(updateGroup.description);
-        dataAccess.group().commitUpdate();
 
         return existingGroup;
     }
@@ -211,7 +212,7 @@ public class GroupWebService {
     // to perform operations on group objects.
     private void verifyCurrentUserIsChannelMember(long channelId)
     {
-        currentUser = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
+        currentUser = userDao.getByProviderId(currentUserIdProvider.get());
         if(currentUser == null)
         {
             // No profile for the user was found in the database so can't possibly be a channel member

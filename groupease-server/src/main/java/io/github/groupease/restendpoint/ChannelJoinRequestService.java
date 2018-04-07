@@ -1,10 +1,12 @@
 package io.github.groupease.restendpoint;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.inject.persist.Transactional;
 import io.github.groupease.auth.CurrentUserId;
+import io.github.groupease.db.GroupeaseUserDao;
+import io.github.groupease.db.MemberDao;
 import io.github.groupease.user.UserNotFoundException;
 import io.github.groupease.db.ChannelJoinRequestDao;
-import io.github.groupease.db.DataAccess;
 import io.github.groupease.exception.*;
 import io.github.groupease.model.ChannelJoinRequest;
 import io.github.groupease.model.Member;
@@ -27,15 +29,18 @@ public class ChannelJoinRequestService
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ChannelJoinRequestDao requestDao;
-    private final DataAccess dataAccess;
+    private final MemberDao memberDao;
+    private final GroupeaseUserDao userDao;
     private final Provider<String> currentUserIdProvider;
 
     @Inject
-    public ChannelJoinRequestService(@Nonnull DataAccess dataAccessObject,
+    public ChannelJoinRequestService(@Nonnull ChannelJoinRequestDao requestDao, 
+                                     @Nonnull MemberDao memberDao, @Nonnull GroupeaseUserDao userDao,
                                      @Nonnull @CurrentUserId Provider<String> currentUserIdProvider)
     {
-        dataAccess = dataAccessObject;
-        this.requestDao = dataAccessObject.channelJoinRequest();
+        this.requestDao = requestDao;
+        this.memberDao = memberDao;
+        this.userDao = userDao;
         this.currentUserIdProvider = currentUserIdProvider;
     }
 
@@ -61,7 +66,7 @@ public class ChannelJoinRequestService
         else
         {
             // Return only a request from this user
-            GroupeaseUser userProfile = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
+            GroupeaseUser userProfile = userDao.getByProviderId(currentUserIdProvider.get());
             return requestDao.listInChannel(channelId, userProfile);
         }
     }
@@ -97,7 +102,7 @@ public class ChannelJoinRequestService
         else
         {
             // Return only a request from this user
-            GroupeaseUser userProfile = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
+            GroupeaseUser userProfile = userDao.getByProviderId(currentUserIdProvider.get());
             if(userProfile.getId().equals(request.getRequestor().getId()))
             {
                 return request;
@@ -118,11 +123,12 @@ public class ChannelJoinRequestService
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed
+    @Transactional
     public ChannelJoinRequest create(@PathParam("channelId") long channelId, @Nonnull CommentWrapper wrapper)
     {
         LOGGER.trace("ChannelJoinRequestService.create(channel={}, comments={})", channelId, wrapper.comments);
 
-        GroupeaseUser profile = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
+        GroupeaseUser profile = userDao.getByProviderId(currentUserIdProvider.get());
         if(profile == null)
         {
             throw new UserNotFoundException();
@@ -156,6 +162,7 @@ public class ChannelJoinRequestService
     @POST
     @Path("{requestId}/acceptance")
     @Timed
+    @Transactional
     public void accept(@PathParam("channelId") long channelId,  @PathParam("requestId") long requestId)
     {
         LOGGER.debug("ChannelJoinRequestService.accept(channel={}, request={})", channelId, requestId);
@@ -174,7 +181,7 @@ public class ChannelJoinRequestService
         }
 
         // Current user is a channel owner so create a new member object
-        Member newMember = dataAccess.member().create(request.getRequestor(), request.getChannel());
+        Member newMember = memberDao.create(request.getRequestor(), request.getChannel());
         if(newMember == null)
         {
             throw new ServerErrorException("Failed to create the new member record", 500);
@@ -192,6 +199,7 @@ public class ChannelJoinRequestService
     @POST
     @Path("{requestId}/rejection")
     @Timed
+    @Transactional
     public void reject(@PathParam("channelId") long channelId, @PathParam("requestId") long requestId)
     {
         LOGGER.debug("ChannelJoinRequestService.reject(channel={}, request={})", channelId, requestId);
@@ -223,6 +231,7 @@ public class ChannelJoinRequestService
     @DELETE
     @Path("{requestId}")
     @Timed
+    @Transactional
     public void delete(@PathParam("channelId") long channelId, @PathParam("requestId") long requestId)
     {
         LOGGER.debug("ChannelJoinRequestService.delete(channel={} request={}", channelId, requestId);
@@ -233,12 +242,12 @@ public class ChannelJoinRequestService
         ChannelJoinRequest request = requestDao.getById(requestId);
         if(request != null)
         {
-            GroupeaseUser currentUser = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
+            GroupeaseUser currentUser = userDao.getByProviderId(currentUserIdProvider.get());
             if(currentUser == null)
             {
                 throw new UserNotFoundException("Currently logged in user has no profile");
             }
-            if(request.getRequestor().getId().equals(currentUser.getId())) {
+            if(!request.getRequestor().getId().equals(currentUser.getId())) {
                 throw new NotSenderException();
             }
             requestDao.delete(request);
@@ -251,7 +260,7 @@ public class ChannelJoinRequestService
 
     private boolean isChannelOwner(long channelId)
     {
-        GroupeaseUser currentUser = dataAccess.userProfile().getByProviderId(currentUserIdProvider.get());
+        GroupeaseUser currentUser = userDao.getByProviderId(currentUserIdProvider.get());
         if(currentUser == null)
         {
             throw new UserNotFoundException("Currently logged in user has no profile");

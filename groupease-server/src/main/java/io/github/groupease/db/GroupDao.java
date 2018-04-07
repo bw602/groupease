@@ -8,6 +8,7 @@ import javax.persistence.TypedQuery;
 
 import static java.util.Objects.requireNonNull;
 
+import com.google.inject.persist.Transactional;
 import io.github.groupease.model.Group;
 import io.github.groupease.model.Member;
 import org.slf4j.Logger;
@@ -89,15 +90,12 @@ public class GroupDao {
      * Deletes a {@link Group} from the database
      * @param group The group to delete. It must have been previously retrieved and not manually constructed
      */
+    @Transactional
     public void delete(@Nonnull Group group)
     {
         LOGGER.debug("GroupDao.delete({}) called", group.getName());
 
-        EntityTransaction et = entityManager.getTransaction();
-        et.begin();
         entityManager.remove(group);
-        entityManager.flush();
-        et.commit();
     }
 
     /**
@@ -107,35 +105,16 @@ public class GroupDao {
      * @param description An optional description of the group
      * @return The newly created group object complete with unique ID
      */
+    @Transactional
     public Group create(long channelId, @Nonnull String name, String description, Member firstMember)
     {
         LOGGER.debug("GroupDao.Create(channelId={}, name={}, description={})", channelId, name, description);
 
         Group newGroup = new Group(channelId, name, description);
 
-        beginUpdate();
         newGroup.getMembers().add(firstMember);
         entityManager.persist(newGroup);
-        commitUpdate();
 
         return newGroup;
-    }
-
-    /**
-     * Starts an update transaction. Changes to a previously retrieved {@link Group} will be tracked from this
-     * call going forward
-     */
-    public void beginUpdate()
-    {
-        updateTransaction = entityManager.getTransaction();
-        updateTransaction.begin();
-    }
-
-    /**
-     * Commits an update transaction started by a previous call to beginUpdate
-     */
-    public void commitUpdate()
-    {
-        updateTransaction.commit();
     }
 }

@@ -1,5 +1,6 @@
 package io.github.groupease.db;
 
+import com.google.inject.persist.Transactional;
 import io.github.groupease.model.Channel;
 import io.github.groupease.model.ChannelInvitation;
 import io.github.groupease.model.ChannelJoinRequest;
@@ -90,6 +91,7 @@ public class ChannelInvitationDao
      * @param channelId The ID of the channel the recipient is being invited to
      * @return The newly created ChannelInvitation object
      */
+    @Transactional
     public ChannelInvitation create(long senderId, long recipientId, long channelId)
     {
         LOGGER.debug("ChannelInvitationDao.create()");
@@ -108,14 +110,11 @@ public class ChannelInvitationDao
      * Permanently removes the {@link ChannelInvitation} from the database
      * @param invitation The ChannelInvitation object to remove. It must have previously been retrieved (not constructed)
      */
+    @Transactional
     public void delete(ChannelInvitation invitation)
     {
         LOGGER.debug("ChannelInvitationDao.delete({})", invitation.getId());
 
-        EntityTransaction et = entityManager.getTransaction();
-        et.begin();
         entityManager.remove(invitation);
-        entityManager.flush();
-        et.commit();
     }
 }
