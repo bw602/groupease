@@ -65,6 +65,34 @@ public class JpaChannelDao implements ChannelDao {
     @Nonnull
     @Override
     @Timed
+    public List<Channel> list(
+            long userId
+    ) {
+        LOGGER.debug("JpaChannelDao.list({}) called.", userId);
+
+        TypedQuery<ChannelDto> query = entityManager.createQuery(
+                "SELECT dto FROM ChannelDto dto, Member mem WHERE dto.id = mem.channelId AND mem.userId = :provideUserId ORDER BY dto.name ASC",
+                ChannelDto.class
+        );
+
+        query.setParameter("provideUserId", userId);
+        List<ChannelDto> channelDtoList = query.getResultList();
+
+        List<Channel> channels = new ArrayList<>();
+
+        for (ChannelDto channelDto : channelDtoList) {
+            channels.add(
+                    Channel.Builder.from(channelDto)
+                            .build()
+            );
+        }
+
+        return channels;
+    }
+
+    @Nonnull
+    @Override
+    @Timed
     public Channel getById(
             long id
     ) {

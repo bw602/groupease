@@ -18,6 +18,16 @@ public interface ChannelService {
     List<Channel> list();
 
     /**
+     * Fetch all {@link Channel} instances that Member is a part of.
+     *
+     * @return the list of all {@link Channel} instances that include the memberId.
+     */
+    @Nonnull
+    List<Channel> list(
+            long userId
+    );
+
+    /**
      * Fetch a {@link Channel} instance by its ID.
      *
      * @param id the ID of the {@link Channel} instance to fetch.
