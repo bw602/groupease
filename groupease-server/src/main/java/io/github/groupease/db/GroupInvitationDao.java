@@ -1,7 +1,9 @@
 package io.github.groupease.db;
 
 import com.google.inject.persist.Transactional;
+import io.github.groupease.model.Group;
 import io.github.groupease.model.GroupInvitation;
+import io.github.groupease.model.GroupeaseUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,13 +84,13 @@ public class GroupInvitationDao
      */
     public GroupInvitation get(long invitationId, long userId, long channelId)
     {
-        LOGGER.debug("GroupInvitationDao.get({})", invitationId);
+        LOGGER.debug("GroupInvitationDao.get(invitation={}, user={}, channel={})", invitationId, userId, channelId);
 
         TypedQuery<GroupInvitation> query = entityManager.createQuery(
-                "SELECT gi FROM GroupInvitation gi WHERE gi.id = :invitationId AND gi.recipient.id = :userID AND gi.group.channelId = :channelId",
+                "SELECT gi FROM GroupInvitation gi WHERE gi.id = :invitationId AND gi.recipient.id = :userId AND gi.group.channelId = :channelId",
                 GroupInvitation.class);
         query.setParameter("invitationId", invitationId);
-        query.setParameter("userID", userId);
+        query.setParameter("userId", userId);
         query.setParameter("channelId", channelId);
 
         List<GroupInvitation> results = query.getResultList();
@@ -98,6 +100,51 @@ public class GroupInvitationDao
         }
 
         return results.get(0);
+    }
+
+    /**
+     * Gets a {@link GroupInvitation} sent to a particular user from a particular group
+     * @param userId The recipient of the invitation
+     * @param groupId The group the recipient is being invited to
+     * @return The invitation or null if none was found
+     */
+    public GroupInvitation get(long userId, long groupId)
+    {
+        LOGGER.debug("GroupInvitationDao.get(user={}, group={})", userId, groupId);
+
+        TypedQuery<GroupInvitation> query = entityManager.createQuery(
+                "SELECT gi FROM GroupInvitation gi WHERE gi.recipient.id = :userId AND gi.group.id = :groupId",
+                GroupInvitation.class);
+        query.setParameter("userId", userId);
+        query.setParameter("groupId", groupId);
+
+        List<GroupInvitation> results = query.getResultList();
+        if(results.isEmpty())
+        {
+            return null;
+        }
+
+        return results.get(0);
+    }
+
+    /**
+     * Creates (sends) a new {@link GroupInvitation} and persists it in the database
+     * @param sender The {@link GroupeaseUser} that is sending the invitation
+     * @param recipient The {@link GroupeaseUser} that will recieve the invitation
+     * @param group The {@link Group} that the recipient is being invited to
+     * @return The newly created invitation
+     */
+    @Transactional
+    public GroupInvitation create(GroupeaseUser sender, GroupeaseUser recipient, Group group)
+    {
+        LOGGER.debug("GroupInvitationDao.create(sender={}, recipient={}, group={}",
+                sender.getId(), recipient.getId(), group.getId());
+
+        GroupInvitation newInvitation = new GroupInvitation(sender, recipient, group);
+
+        entityManager.persist(newInvitation);
+
+        return newInvitation;
     }
 
     /**

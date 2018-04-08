@@ -27,6 +27,15 @@ public class GroupInvitation {
     @UpdateTimestamp
     private Instant lastUpdate;
 
+    public GroupInvitation() {}
+
+    public GroupInvitation(GroupeaseUser sender, GroupeaseUser recipient, Group group)
+    {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.group = group;
+    }
+
     /**
      * Gets the unique ID of this invitation
      * @return The unique ID of this invitation
