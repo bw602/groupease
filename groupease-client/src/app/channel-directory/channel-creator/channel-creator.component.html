@@ -1,0 +1,75 @@
+<div class="channel-creator-container">
+
+  <form #channelForm="ngForm"
+        (ngSubmit)="onSubmit()">
+
+    <mat-card>
+
+      <mat-card-title>
+        Create channel
+      </mat-card-title>
+
+      <mat-card-content class="channel-form-card-content">
+
+        <mat-form-field>
+
+          <input matInput
+                 type="text"
+                 name="name"
+                 required
+                 [(ngModel)]="channel.name"
+                 #channelName="ngModel"
+                 placeholder="Name" />
+
+          <mat-hint>
+            A unique name for this channel
+          </mat-hint>
+
+          <mat-error *ngIf="channelName.invalid">
+            {{getChannelNameErrorMessage(channelName.errors)}}
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field>
+
+          <textarea matInput
+                    name="description"
+                    [(ngModel)]="channel.description"
+                    #channelDescription="ngModel"
+                    matTextareaAutosize
+                    placeholder="Description"></textarea>
+
+          <mat-hint>
+            Details about the channel
+          </mat-hint>
+
+          <mat-error *ngIf="channelDescription.invalid">
+            Description is invalid
+          </mat-error>
+
+        </mat-form-field>
+
+      </mat-card-content>
+
+      <mat-card-actions>
+
+        <button mat-button
+                type="reset">
+          RESET
+        </button>
+
+        <button mat-button
+                type="submit"
+                color="primary"
+                [disabled]="!channelForm.form.valid">
+          CREATE
+        </button>
+
+      </mat-card-actions>
+
+    </mat-card>
+
+  </form>
+
+</div>
