@@ -48,6 +48,16 @@ public class DefaultChannelService implements ChannelService {
     @Nonnull
     @Override
     @Timed
+    public List<Channel> list(
+            long userId
+    ) {
+        LOGGER.debug("DefaultChannelService.list({}) called.", userId);
+        return channelDao.list(userId);
+    }
+
+    @Nonnull
+    @Override
+    @Timed
     public Channel getById(
             long id
     ) {

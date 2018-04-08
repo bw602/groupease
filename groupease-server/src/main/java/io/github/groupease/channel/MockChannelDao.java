@@ -19,6 +19,15 @@ public class MockChannelDao implements ChannelDao {
 
     @Nonnull
     @Override
+    public List<Channel> list(
+            long userId
+    ) {
+        return new ArrayList<>();
+    }
+
+
+    @Nonnull
+    @Override
     public Channel getById(
             long id
     ) {

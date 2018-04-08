@@ -7,6 +7,8 @@ import javax.inject.Provider;
 
 import com.google.common.collect.ImmutableList;
 import io.github.groupease.GroupeaseTestGuiceModule;
+import io.github.groupease.user.GroupeaseUser;
+import io.github.groupease.user.UserWebService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
@@ -25,6 +27,9 @@ public class ChannelWebServiceTest {
 
     @Inject
     private Channel channel;
+
+    @Inject
+    private GroupeaseUser user;
 
     @Inject
     private ChannelDto channelDto;
@@ -62,7 +67,27 @@ public class ChannelWebServiceTest {
         when(channelService.list()).thenReturn(expected);
 
         /* Make the call. */
-        List<Channel> actual = toTest.list();
+        List<Channel> actual = toTest.list(null);
+
+        /* Verify results. */
+        assertEquals(actual, expected);
+    }
+
+    /**
+     * It should call {@link ChannelService#list()} and return the result.
+     *
+     * @throws Exception on error.
+     */
+    @Test
+    public void testGetMemberChannels() throws Exception {
+        /* Set up test. */
+        List<Channel> expected = ImmutableList.of(channel);
+
+        /* Train the mocks. */
+        when(channelService.list(user.getId())).thenReturn(expected);
+
+        /* Make the call. */
+        List<Channel> actual = toTest.list(user.getId());
 
         /* Verify results. */
         assertEquals(actual, expected);

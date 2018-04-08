@@ -18,6 +18,16 @@ public interface ChannelDao {
     List<Channel> list();
 
     /**
+     * Fetch all {@link Channel} instances that the Member is a part of.
+     *
+     * @return the list of all {@link Channel} instances containing memberId.
+     */
+    @Nonnull
+    List<Channel> list(
+            long userId
+    );
+
+    /**
      * Fetch a {@link Channel} instance by its ID.
      *
      * @param id the ID of the {@link Channel} instance to fetch.
