@@ -3,36 +3,25 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GroupeaseMaterialModule } from './groupease-material.module';
 import { ToolbarComponent } from './toolbar/toolbar.component';
-import { CallbackComponent } from './callback/callback.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import {HttpClientModule} from '@angular/common/http';
-import { ChannelService } from './channel.service';
-import { AuthService } from './auth/auth.service';
-import {UserService} from './user.service';
+import { HttpClientModule } from '@angular/common/http';
+import { MatButtonModule, MatToolbarModule } from '@angular/material';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    ToolbarComponent,
-    CallbackComponent,
-    DashboardComponent
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    GroupeaseMaterialModule,
-    HttpClientModule
-  ],
-  providers: [
-    AuthService,
-    ChannelService,
-    UserService
+    CoreModule,
+    HttpClientModule,
+    MatButtonModule,
+    MatToolbarModule
   ],
   bootstrap: [
     AppComponent

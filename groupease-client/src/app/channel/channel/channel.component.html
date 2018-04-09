@@ -1,0 +1,21 @@
+<mat-sidenav-container class="channel-container">
+
+  <mat-sidenav mode="side"
+               opened
+               disableClose>
+
+    <mat-toolbar color="accent">
+      <span>
+        {{channel.name}}
+      </span>
+    </mat-toolbar>
+
+    <app-channel-navigation></app-channel-navigation>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
