@@ -3,6 +3,7 @@ package io.github.groupease.user;
 import javax.inject.Inject;
 
 import io.github.groupease.GroupeaseTestGuiceModule;
+import io.github.groupease.model.GroupeaseUser;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 
@@ -20,16 +21,7 @@ public class GroupeaseUserTest {
     @Inject
     private GroupeaseUserDto groupeaseUserDto;
 
-    /**
-     * It should be equal to a builder built from the instance.
-     *
-     * @throws Exception on error.
-     */
-    @Test
-    public void testBuildFromExistingGroupeaseUser() throws Exception {
-        GroupeaseUser groupeaseUserCopy = GroupeaseUser.Builder.from(groupeaseUser).build();
-        assertEquals(groupeaseUserCopy, groupeaseUser);
-    }
+
 
     /**
      * It should be equal to a builder built from a filled {@link GroupeaseUserDto}.
@@ -38,7 +30,7 @@ public class GroupeaseUserTest {
      */
     @Test
     public void testBuildFromGroupeaseUserDto() throws Exception {
-        GroupeaseUser groupeaseUserCopy = GroupeaseUser.Builder.from(groupeaseUserDto).build();
+        GroupeaseUser groupeaseUserCopy = new GroupeaseUser(groupeaseUserDto);
         assertEquals(groupeaseUserCopy, groupeaseUser);
     }
 

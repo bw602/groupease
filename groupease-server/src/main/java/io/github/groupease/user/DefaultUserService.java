@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
+import io.github.groupease.model.GroupeaseUser;
 import io.github.groupease.user.retrieval.UserRetrievalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.Timed;
+import io.github.groupease.model.GroupeaseUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

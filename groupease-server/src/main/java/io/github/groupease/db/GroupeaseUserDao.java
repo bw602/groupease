@@ -1,7 +1,10 @@
 package io.github.groupease.db;
 
+import com.google.inject.persist.Transactional;
 import io.github.groupease.model.GroupeaseUser;
 import io.github.groupease.user.GroupeaseUserDto;
+import io.github.groupease.user.UserDao;
+import io.github.groupease.user.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +17,7 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
-public class GroupeaseUserDao
+public class GroupeaseUserDao implements UserDao
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final EntityManager entityManager;
@@ -61,15 +64,67 @@ public class GroupeaseUserDao
     }
 
     /**
+     * Fetch all {@link GroupeaseUser} instances in the system.
+     *
+     * @return the list of all {@link GroupeaseUser} instances.
+     */
+    @Nonnull
+    @Override
+    public List<GroupeaseUser> list()
+    {
+        LOGGER.debug("GroupeaseUserDao.list()");
+
+        TypedQuery<GroupeaseUser> query = entityManager.createQuery(
+                "SELECT gu FROM GroupeaseUser gu ORDER BY gu.name ASC", GroupeaseUser.class);
+
+        return query.getResultList();
+    }
+
+    /**
      * Retrieves the GroupeaseUser for the given identifier
      * @param userId The locally unique id for the GroupeaseUser. This is not the Auth0 id
-     * @return The stored GroupeaseUser for the given ID or null for no match
+     * @return The stored GroupeaseUser for the given ID
      */
+    @Nonnull
+    @Override
     public GroupeaseUser getById(long userId)
     {
         LOGGER.debug("GroupeaseUserDao.getById({})", userId);
 
-        return entityManager.find(GroupeaseUser.class, userId);
+        GroupeaseUser user = entityManager.find(GroupeaseUser.class, userId);
+        if(user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        return user;
+    }
+
+    /**
+     * Save a {@link GroupeaseUser} instance.
+     * This method may update an existing instance or create a new one.
+     *
+     * @param toSave the {@link GroupeaseUserDto} instance to save.
+     * @return the saved {@link GroupeaseUserDto} instance.
+     */
+    @Nonnull
+    @Override
+    @Transactional
+    public GroupeaseUser save(@Nonnull GroupeaseUserDto toSave)
+    {
+        LOGGER.debug("GroupeaseUserDao.save({})", toSave.getProviderUserId());
+
+        // Look for an existing user with the same provider ID. If found, overwrite existing record with
+        // the new profile data, otherwise create new user in the database
+        GroupeaseUser existingUser = getByProviderId(toSave.getProviderUserId());
+        if(existingUser == null)
+        {
+            LOGGER.debug("GroupeaseUserDao.save: no matching provider ID in database, creating new record");
+            return create(toSave);
+        }
+
+        LOGGER.debug("GroupeaseUserDao.save: merging new profile data into existing record");
+        return entityManager.merge(new GroupeaseUser(toSave, existingUser.getId()));
     }
 
     /**
@@ -92,6 +147,8 @@ public class GroupeaseUserDao
             return null;
         }
 
+        // Provider ID is a unique column in the DB so if the list is not empty,
+        // then it is guaranteed to be exactly one result
         return results.get(0);
     }
 }

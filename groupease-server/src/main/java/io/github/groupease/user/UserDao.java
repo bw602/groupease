@@ -1,6 +1,7 @@
 package io.github.groupease.user;
 
 import java.util.List;
+import io.github.groupease.model.GroupeaseUser;
 
 import javax.annotation.Nonnull;
 

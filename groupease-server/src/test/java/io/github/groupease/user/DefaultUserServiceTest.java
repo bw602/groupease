@@ -7,6 +7,7 @@ import javax.inject.Provider;
 
 import com.google.common.collect.ImmutableList;
 import io.github.groupease.GroupeaseTestGuiceModule;
+import io.github.groupease.model.GroupeaseUser;
 import io.github.groupease.user.retrieval.UserRetrievalService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Guice;

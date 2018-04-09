@@ -2,8 +2,10 @@ package io.github.groupease.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.groupease.user.GroupeaseUserDto;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.annotation.Nonnull;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
@@ -32,15 +34,41 @@ public class GroupeaseUser
 
     /**
      * Conversion constructor from auth library user profile to local db copy
-     * @param authZeroUser The user profile data from the authentication service (Auth0)
+     * @param dto The user profile data from the authentication service (Auth0)
      */
-    public GroupeaseUser(GroupeaseUserDto authZeroUser)
+    public GroupeaseUser(GroupeaseUserDto dto)
     {
-        providerUserId = authZeroUser.getProviderUserId();
-        name = authZeroUser.getName();
-        nickName = authZeroUser.getNickname();
-        email = authZeroUser.getEmail();
-        pictureUrl = authZeroUser.getPictureUrl();
+        id = dto.getId();
+        providerUserId = dto.getProviderUserId();
+        name = dto.getName();
+        nickName = dto.getNickname();
+        email = dto.getEmail();
+        pictureUrl = dto.getPictureUrl();
+        lastUpdate = dto.getLastUpdatedOn();
+    }
+
+    /**
+     * Conversion constructor from auth library user profile to local db copy with ID override.
+     * Use when merging refreshed profile information with an existing profile in the database
+     * @param dto The user profile data from the authentication service (Auth0)
+     * @param id The unique ID for the user
+     */
+    public GroupeaseUser(GroupeaseUserDto dto, long id)
+    {
+        this.id = id;
+        providerUserId = dto.getProviderUserId();
+        name = dto.getName();
+        nickName = dto.getNickname();
+        email = dto.getEmail();
+        pictureUrl = dto.getPictureUrl();
+        lastUpdate = dto.getLastUpdatedOn();
+    }
+
+    // Infrastructure
+    @Override
+    public boolean equals(Object obj)
+    {
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
     // Accessors
@@ -58,6 +86,7 @@ public class GroupeaseUser
      * @return The user's identifier with the authentication service
      */
     @JsonIgnore
+    @Nonnull
     public String getProviderUserId() {
         return providerUserId;
     }
@@ -66,6 +95,7 @@ public class GroupeaseUser
      * Gets the name of the user
      * @return The user's name
      */
+    @Nonnull
     public String getName() {
         return name;
     }
@@ -82,6 +112,7 @@ public class GroupeaseUser
      * Gets the user's email address
      * @return The user's email address
      */
+    @Nonnull
     public String getEmail() {
         return email;
     }

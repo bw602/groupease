@@ -26,7 +26,7 @@ import io.github.groupease.channel.ChannelDto;
 import io.github.groupease.channel.ChannelService;
 import io.github.groupease.config.guice.NoCache;
 import io.github.groupease.exception.mapper.GroupeaseClientError;
-import io.github.groupease.user.GroupeaseUser;
+import io.github.groupease.model.GroupeaseUser;
 import io.github.groupease.user.GroupeaseUserDto;
 import io.github.groupease.user.UserDao;
 import io.github.groupease.user.UserService;
@@ -196,8 +196,7 @@ public class GroupeaseTestGuiceModule extends AbstractModule {
     private GroupeaseUser provideGroupeaseUser(
             @Nonnull GroupeaseUserDto groupeaseUserDto
     ) {
-        return GroupeaseUser.Builder.from(groupeaseUserDto)
-                .build();
+        return new GroupeaseUser(groupeaseUserDto);
     }
 
     /**
