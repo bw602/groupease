@@ -20,7 +20,7 @@ CREATE TABLE Member (
     userId BIGSERIAL NOT NULL REFERENCES GroupeaseUser,
     ChannelId BIGSERIAL NOT NULL REFERENCES Channel,
     IsOwner BOOLEAN NOT NULL DEFAULT FALSE,
-    -- Per channel profile fields to go here later
+    -- Issue #31: Per channel profile fields to go here later
     LastUpdate TIMESTAMP NOT NULL
 );
 
@@ -36,14 +36,14 @@ CREATE TABLE ChannelGroup (
 CREATE TABLE GroupMember (
     GroupID BIGSERIAL NOT NULL REFERENCES ChannelGroup ON DELETE CASCADE,
     MemberID BIGSERIAL NOT NULL REFERENCES Member ON DELETE CASCADE,
-    LastUpdate TIMESTAMP NOT NULL,
+    LastUpdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (GroupID, MemberID)
 );
 
 CREATE TABLE ChannelInvitation (
     ID BIGSERIAL PRIMARY KEY,
     ChannelID BIGSERIAL NOT NULL REFERENCES Channel ON DELETE CASCADE,
-    SenderID BIGSERIAL NOT NULL REFERENCES Member ON DELETE CASCADE,
+    SenderID BIGSERIAL NOT NULL REFERENCES GroupeaseUser ON DELETE CASCADE,
     recipientId BIGSERIAL NOT NULL REFERENCES GroupeaseUser ON DELETE CASCADE,
     Comments TEXT,
     LastUpdate TIMESTAMP NOT NULL
