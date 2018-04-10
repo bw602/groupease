@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChannelDirectoryComponent } from './channel-directory.component';
-import { MatCardModule, MatIconModule, MatListModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatIconModule, MatListModule, MatTooltipModule } from '@angular/material';
 import { of } from 'rxjs/observable/of';
 import { ChannelService } from '../../core/channel.service';
 
@@ -30,9 +30,11 @@ describe('ChannelDirectoryComponent', () => {
         }
       ],
       imports: [
+        MatButtonModule,
         MatCardModule,
         MatIconModule,
-        MatListModule
+        MatListModule,
+        MatTooltipModule
       ]
     })
     .compileComponents();

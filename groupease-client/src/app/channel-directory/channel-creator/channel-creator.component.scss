@@ -1,0 +1,23 @@
+.channel-creator-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.channel-form-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  justify-content: space-between;
+}
+
+mat-form-field {
+  margin-bottom: 20px;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
