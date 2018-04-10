@@ -20,7 +20,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Optional;
 
 @Path("users/{userId}/channels/{channelId}/group-invitations")
 @Produces(MediaType.APPLICATION_JSON)
@@ -46,6 +45,7 @@ public class GroupInvitationService {
     /**
      * Returns all {@link GroupInvitation}s for a user
      * @param userId The ID of the user to retrieve invitations for
+     * @param channelId The ID of the channel to retrieve invitations for
      * @return The list of invitations for the user. The list will be empty if there are no invitations
      */
     @GET
@@ -62,6 +62,7 @@ public class GroupInvitationService {
     /**
      * Gets a specific {@link GroupInvitation}
      * @param userId The ID of the user the invitation was sent to
+     * @param channelId The ID of the channel the group being invited to is in
      * @param invitationId The ID of the invitation
      * @return The specified invitation
      */
@@ -86,11 +87,12 @@ public class GroupInvitationService {
     }
 
     /**
-     * Creates (sends) a new {@link GroupInvitation} inviting a user to join a channel. Only an owner of the channel
+     * Creates (sends) a new {@link GroupInvitation} inviting a user to join a group. Only an existing group member
      * can send an invitation
      * @param userId The ID of the user being invited
-     * @param invitation A {@link GroupInvitation} that contains the posted JSON with the user and channel
-     *                to create the invitation for
+     * @param channelId The ID of the channel the group being invited to is in
+     * @param invitation A {@link GroupInvitation} that contains the posted JSON with the user and group IDs
+     * to create the invitation for
      * @return The newly created invitation.
      */
     @POST
@@ -166,9 +168,10 @@ public class GroupInvitationService {
     }
 
     /**
-     * Processes a user's acceptance of an invitation to join a channel. A new {@link Member} object will be created
+     * Processes a user's acceptance of an invitation to join a group. The user will be added as a member of the group
      * and the {@link GroupInvitation} will be deleted
      * @param userId The ID of the user that the invitation was sent to
+     * @param channelId The ID of the channel the group being invited to is in
      * @param invitationId The ID of the invitation being accepted
      */
     @POST
@@ -199,8 +202,9 @@ public class GroupInvitationService {
     }
 
     /**
-     * Processes a user's rejection of an invitation to join a channel. The {@link GroupInvitation} will be deleted
+     * Processes a user's rejection of an invitation to join a group. The {@link GroupInvitation} will be deleted
      * @param userId The ID of the user that the invitation was sent to
+     * @param channelId The ID of the channel the group being invited to is in
      * @param invitationId The ID of the invitation
      */
     @POST
@@ -227,8 +231,9 @@ public class GroupInvitationService {
     }
 
     /**
-     * Deletes a {@link GroupInvitation}. Only an owner of the channel may delete an invitation
+     * Deletes (cancels) a {@link GroupInvitation}. Only an existing group member may delete an invitation
      * @param userId The ID of the user the invitation was sent to
+     * @param channelId The ID of the channel the group being invited to is in
      * @param invitationId The ID of the invitation
      */
     @DELETE
