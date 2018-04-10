@@ -8,6 +8,7 @@ import java.time.Instant;
 @Table(name="GroupInvitation")
 public class GroupInvitation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

@@ -3,14 +3,12 @@ package io.github.groupease.restendpoint;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.persist.Transactional;
 import io.github.groupease.auth.CurrentUserId;
+import io.github.groupease.channel.ChannelNotFoundException;
 import io.github.groupease.db.GroupDao;
 import io.github.groupease.db.GroupInvitationDao;
 import io.github.groupease.db.GroupeaseUserDao;
 import io.github.groupease.exception.*;
-import io.github.groupease.model.Group;
-import io.github.groupease.model.GroupInvitation;
-import io.github.groupease.model.GroupeaseUser;
-import io.github.groupease.model.Member;
+import io.github.groupease.model.*;
 import io.github.groupease.user.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +20,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Optional;
 
 @Path("users/{userId}/channels/{channelId}/group-invitations")
 @Produces(MediaType.APPLICATION_JSON)
@@ -103,26 +102,38 @@ public class GroupInvitationService {
         LOGGER.debug("GroupInvitationService.create(userUrl={}, channelUrl={})",
                 userId, channelId);
 
-        // Todo: JSON validation checks
-        if(invitation.getRecipient().getId() != userId)
+        // Group must be provided in POSTed JSON
+        if(invitation.getGroup() == null || invitation.getGroup().getId() == null)
+        {
+            throw new GroupIdMissingException("Group id must be supplied in request");
+        }
+
+        // Recipient ID is optional in the JSON, but if supplied must match the URL
+        if(invitation.getRecipient() != null && invitation.getRecipient().getId() != userId)
         {
             throw new UserMismatchException("The user in the path and the user in the JSON don't match");
         }
 
-        // Only a current group member can create an invitation
-        loggedOnUser = userDao.getByProviderId(currentUserIdProvider.get());
+        // Ensure that the specified group exists and is part of the channel in the URL
         Group targetGroup = groupDao.get(invitation.getGroup().getId());
         if(targetGroup == null)
         {
             throw new GroupNotFoundException("No group with that ID found");
         }
-        if(targetGroup.getMembers().stream().noneMatch(member -> member.getGroupeaseUser() == loggedOnUser))
+        if(targetGroup.getChannelId() != channelId)
+        {
+            throw new ChannelNotFoundException("Channel not found");
+        }
+
+        // Only a current group member can create an invitation
+        loggedOnUser = userDao.getByProviderId(currentUserIdProvider.get());
+        if(targetGroup.getMembers().stream().noneMatch(member -> member.getGroupeaseUser().equals(loggedOnUser)))
         {
             throw new NotGroupMemberException("You must be a group member to send an invitation");
         }
 
         // Verify that the recipient exists
-        GroupeaseUser recipientUser = userDao.getById(invitation.getRecipient().getId());
+        GroupeaseUser recipientUser = userDao.getById(userId);
         if(recipientUser == null)
         {
             throw new UserNotFoundException("You cannot invite a user that does not exist");
@@ -143,7 +154,7 @@ public class GroupInvitationService {
         }
 
         // Verify that the recipient isn't already a group member
-        if(targetGroup.getMembers().stream().noneMatch(member -> member.getGroupeaseUser() == recipientUser))
+        if(targetGroup.getMembers().stream().anyMatch(member -> member.getGroupeaseUser().equals(recipientUser)))
         {
             throw new AlreadyMemberException("Cannot invite a user to a group the user is already a member of");
         }
@@ -225,14 +236,20 @@ public class GroupInvitationService {
         LOGGER.debug("GroupInvitationService.delete(user={}, channel={}, invitation={})",
                 userId, channelId, invitationId);
 
-        // Make sure this invitation actually exists
+        // Make sure this invitation actually exists and is for the given user in the given channel
         GroupInvitation invitation = invitationDao.get(invitationId, userId, channelId);
         if(invitation == null)
         {
             throw new GroupInvitationNotFoundException();
         }
 
-        // Todo: Need consensus on validation logic - any member or sender only?
+        // Validate that the current user is already a group member
+        loggedOnUser = userDao.getByProviderId(currentUserIdProvider.get());
+
+        if(invitation.getGroup().getMembers().stream().noneMatch(member -> member.getGroupeaseUser().equals(loggedOnUser)))
+        {
+            throw new NotGroupMemberException();
+        }
 
         invitationDao.delete(invitation);
     }
