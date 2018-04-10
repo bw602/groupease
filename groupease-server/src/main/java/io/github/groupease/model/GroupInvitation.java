@@ -1,5 +1,6 @@
 package io.github.groupease.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.Instant;
@@ -35,6 +36,12 @@ public class GroupInvitation {
         this.sender = sender;
         this.recipient = recipient;
         this.group = group;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
     /**

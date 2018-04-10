@@ -78,7 +78,8 @@ public class GroupInvitationService {
         GroupInvitation invitation = invitationDao.get(invitationId, userId, channelId);
         if(invitation == null)
         {
-            throw new GroupInvitationNotFoundException();
+            throw new GroupInvitationNotFoundException(
+                    "No invitation with that ID in that channel for that user exists");
         }
 
         return invitation;
@@ -108,7 +109,7 @@ public class GroupInvitationService {
             throw new GroupIdMissingException("Group id must be supplied in request");
         }
 
-        // Recipient ID is optional in the JSON, but if supplied must match the URL
+        // Recipient ID is optional in the JSON, but if supplied it must match the URL
         if(invitation.getRecipient() != null && invitation.getRecipient().getId() != userId)
         {
             throw new UserMismatchException("The user in the path and the user in the JSON don't match");
@@ -140,9 +141,11 @@ public class GroupInvitationService {
         }
 
         // Verify the recipient is a member of the channel
-        if(recipientUser.getMemberList().stream().noneMatch(member -> member.getChannel().getId() == targetGroup.getChannelId()))
+        if(recipientUser.getMemberList()
+                .stream().noneMatch(member -> member.getChannel().getId() == targetGroup.getChannelId()))
         {
-            throw new NotChannelMemberException("You cannot invite a user that is not a member of the channel that the group is formed in");
+            throw new NotChannelMemberException(
+                    "You cannot invite a user that is not a member of the channel that the group is formed in");
         }
 
         // Check that the recipient hasn't already received an invitation to this group
@@ -183,7 +186,8 @@ public class GroupInvitationService {
         GroupInvitation invitation = invitationDao.get(invitationId, userId, channelId);
         if(invitation == null)
         {
-            throw new GroupInvitationNotFoundException();
+            throw new GroupInvitationNotFoundException(
+                    "No invitation with that ID in that channel for that user exists");
         }
 
         // Add the member to the group
@@ -214,7 +218,8 @@ public class GroupInvitationService {
         GroupInvitation invitation = invitationDao.get(invitationId, userId, channelId);
         if(invitation == null)
         {
-            throw new GroupInvitationNotFoundException();
+            throw new GroupInvitationNotFoundException(
+                    "No invitation with that ID in that channel for that user exists");
         }
 
         // Clean up the invitation
@@ -240,15 +245,17 @@ public class GroupInvitationService {
         GroupInvitation invitation = invitationDao.get(invitationId, userId, channelId);
         if(invitation == null)
         {
-            throw new GroupInvitationNotFoundException();
+            throw new GroupInvitationNotFoundException(
+                    "No invitation with that ID in that channel for that user exists");
         }
 
         // Validate that the current user is already a group member
         loggedOnUser = userDao.getByProviderId(currentUserIdProvider.get());
 
-        if(invitation.getGroup().getMembers().stream().noneMatch(member -> member.getGroupeaseUser().equals(loggedOnUser)))
+        if(invitation.getGroup().getMembers()
+                .stream().noneMatch(member -> member.getGroupeaseUser().equals(loggedOnUser)))
         {
-            throw new NotGroupMemberException();
+            throw new NotGroupMemberException("Only a group member can delete the request. Recipient reject instead");
         }
 
         invitationDao.delete(invitation);
@@ -278,7 +285,8 @@ public class GroupInvitationService {
         
         if(loggedOnUser.getMemberList().stream().noneMatch(member -> member.getChannel().getId() == channelId))
         {
-            throw new NotChannelMemberException();
+            throw new NotChannelMemberException(
+                    "You cannot perform operations in this channel because you are not a member");
         }
     }
 }
