@@ -1,36 +1,54 @@
 import { NgModule } from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './home/home.component';
-import {CallbackComponent} from './callback/callback.component';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {AuthGuard} from './auth/auth.guard';
+import { ExtraOptions, PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
 
 const pathRoot = 'views',
+  config: ExtraOptions = {
+    preloadingStrategy: PreloadAllModules
+  },
   routes: Routes = [
     {
-      path: '',
-      redirectTo: `/${pathRoot}/home`,
-      pathMatch: 'full'
-    },
-    {
       path: `${pathRoot}/home`,
-      component: HomeComponent
+      loadChildren: 'app/home/home.module#HomeModule'
     },
     {
       path: `${pathRoot}/callback`,
-      component: CallbackComponent
+      loadChildren: 'app/callback/callback.module#CallbackModule'
     },
     {
       path: `${pathRoot}/dashboard`,
-      component: DashboardComponent,
-      canActivate: [
+      loadChildren: 'app/dashboard/dashboard.module#DashboardModule',
+      canLoad: [
         AuthGuard
       ]
+    },
+    {
+      path: `${pathRoot}/channel-directory`,
+      loadChildren: 'app/channel-directory/channel-directory.module#ChannelDirectoryModule',
+      canLoad: [
+        AuthGuard
+      ]
+    },
+    {
+      path: `${pathRoot}/channels/:id`,
+      loadChildren: 'app/channel/channel.module#ChannelModule',
+      canLoad: [
+        AuthGuard
+      ]
+    },
+    {
+      path: '**',
+      redirectTo: `/${pathRoot}/home`
     }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(
+      routes,
+      config
+    )
+  ],
   exports: [RouterModule],
   providers: [AuthGuard]
 })

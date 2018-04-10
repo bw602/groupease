@@ -1,4 +1,4 @@
-import {Component, HostBinding} from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +8,6 @@ import {Component, HostBinding} from '@angular/core';
 export class AppComponent {
 
   /* Apply groupease-view CSS class to the component element. */
-  @HostBinding('class.groupease-view') true;
+  @HostBinding('class.groupease-root') true;
 
 }

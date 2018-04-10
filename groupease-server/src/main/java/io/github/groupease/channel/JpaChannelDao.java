@@ -65,6 +65,34 @@ public class JpaChannelDao implements ChannelDao {
     @Nonnull
     @Override
     @Timed
+    public List<Channel> list(
+            long userId
+    ) {
+        LOGGER.debug("JpaChannelDao.list({}) called.", userId);
+
+        TypedQuery<ChannelDto> query = entityManager.createQuery(
+                "SELECT dto FROM ChannelDto dto, Member mem WHERE dto.id = mem.channelId AND mem.userId = :provideUserId ORDER BY dto.name ASC",
+                ChannelDto.class
+        );
+
+        query.setParameter("provideUserId", userId);
+        List<ChannelDto> channelDtoList = query.getResultList();
+
+        List<Channel> channels = new ArrayList<>();
+
+        for (ChannelDto channelDto : channelDtoList) {
+            channels.add(
+                    Channel.Builder.from(channelDto)
+                            .build()
+            );
+        }
+
+        return channels;
+    }
+
+    @Nonnull
+    @Override
+    @Timed
     public Channel getById(
             long id
     ) {
@@ -93,6 +121,10 @@ public class JpaChannelDao implements ChannelDao {
 
         ChannelDto channelDto = entityManager.merge(toUpdate);
 
+        /* Refresh instance. */
+        entityManager.flush();
+        entityManager.refresh(channelDto);
+
         return Channel.Builder.from(channelDto)
                 .build();
     }
@@ -106,6 +138,10 @@ public class JpaChannelDao implements ChannelDao {
         LOGGER.debug("JpaChannelDao.create({}) called.", toCreate);
 
         entityManager.persist(toCreate);
+
+        /* Refresh instance. */
+        entityManager.flush();
+        entityManager.refresh(toCreate);
 
         return Channel.Builder.from(toCreate)
                 .build();

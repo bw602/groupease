@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
+import 'rxjs/add/operator/take';
+import { UserService } from '../core/user.service';
 
 @Injectable()
 export class AuthService {
 
   private homeRoute = 'views/home';
+  private dashboardRoute = 'views/dashboard';
 
   auth0 = new auth0.WebAuth(
     {
@@ -19,7 +22,8 @@ export class AuthService {
   );
 
   constructor(
-    public router: Router
+    public router: Router,
+    private userService: UserService
   ) {}
 
   public login(): void {
@@ -30,7 +34,14 @@ export class AuthService {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
-        this.router.navigate([this.homeRoute]);
+        this.userService.saveCurrentUser()
+          .take(1)
+          .subscribe(
+            () => {
+              this.router.navigate([this.dashboardRoute]);
+            }
+          );
+
       } else if (err) {
         this.router.navigate([this.homeRoute]);
         console.log(err);
@@ -48,6 +59,9 @@ export class AuthService {
   }
 
   public logout(): void {
+    // Clear the currentUser from userService
+    this.userService.clearCachedCurrentUser();
+
     // Remove tokens and expiry time from localStorage
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
