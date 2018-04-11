@@ -6,19 +6,30 @@
 //@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
 //@import '~@angular/material/prebuilt-themes/purple-green.css';
 
-/* Ensure body at least full browser height. Set default font. */
+/* Ensure body at least full browser height. */
 body {
   display: flex;
   min-height: 100vh;
   margin: 0;
   padding: 0;
   flex-direction: column;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* Class to use on route components to ensure they fill the height. */
+/* Ensure route components fill their height. */
+.groupease-root,
 .groupease-view {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+}
+
+/* Padding, with more on bottom for potential FABs. */
+.groupease-view {
+  padding: 20px 20px 100px 20px;
+}
+
+.groupease-fab-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }

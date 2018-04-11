@@ -1,0 +1,25 @@
+<div class="channel-list-container">
+
+  <mat-nav-list>
+
+    <h1 mat-subheader>
+      Member Channels
+    </h1>
+
+    <a [routerLink]="['/views/channels', channel.id]"
+       mat-list-item
+       *ngFor="let channel of channels">
+
+      <mat-icon matListIcon>
+        domain
+      </mat-icon>
+
+      <h2 matLine>
+        {{channel.name}}
+      </h2>
+
+    </a>
+
+  </mat-nav-list>
+
+</div>

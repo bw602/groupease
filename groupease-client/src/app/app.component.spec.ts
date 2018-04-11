@@ -1,8 +1,7 @@
-import {async, TestBed} from '@angular/core/testing';
-import {AppComponent} from './app.component';
-import {RouterTestingModule} from '@angular/router/testing';
-import {GroupeaseMaterialModule} from './groupease-material.module';
-import {Component} from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
+import { AppComponent } from './app.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from '@angular/core';
 
 /* Test stub. */
 @Component({selector: 'app-toolbar', template: ''})
@@ -17,7 +16,6 @@ describe('AppComponent', () => {
         ToolbarComponent
       ],
       imports: [
-        GroupeaseMaterialModule,
         RouterTestingModule
       ]
     }).compileComponents();

@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToolbarComponent } from './toolbar.component';
-import {GroupeaseMaterialModule} from '../groupease-material.module';
-import {AuthService} from '../auth/auth.service';
-import {RouterTestingModule} from '@angular/router/testing';
+import { AuthService } from '../auth/auth.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatButtonModule, MatToolbarModule } from '@angular/material';
 
 describe('ToolbarComponent', () => {
   let component: ToolbarComponent;
@@ -29,7 +29,8 @@ describe('ToolbarComponent', () => {
         }
       ],
       imports: [
-        GroupeaseMaterialModule,
+        MatButtonModule,
+        MatToolbarModule,
         RouterTestingModule
       ]
     })

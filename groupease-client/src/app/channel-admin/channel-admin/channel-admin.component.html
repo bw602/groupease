@@ -1,0 +1,42 @@
+<div class="channel-admin-container">
+
+  <mat-card>
+
+    <mat-card-title>
+      Channel Admin
+    </mat-card-title>
+
+    <mat-card-content>
+
+      <nav mat-tab-nav-bar>
+
+        <a mat-tab-link
+           routerLink="join-requests"
+           routerLinkActive #joinRequestsRoute="routerLinkActive"
+           [active]="joinRequestsRoute.isActive">
+          Join Requests
+        </a>
+
+        <a mat-tab-link
+           routerLink="channel-members"
+           routerLinkActive #channelMembersRoute="routerLinkActive"
+           [active]="channelMembersRoute.isActive">
+          Channel Members
+        </a>
+
+        <a mat-tab-link
+           routerLink="users"
+           routerLinkActive #usersRoute="routerLinkActive"
+           [active]="usersRoute.isActive">
+          Invitations
+        </a>
+
+      </nav>
+
+      <router-outlet></router-outlet>
+
+    </mat-card-content>
+
+  </mat-card>
+
+</div>
