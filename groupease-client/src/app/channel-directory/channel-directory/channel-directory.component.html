@@ -1,30 +1,71 @@
 <div class="channel-directory-container">
 
-  <mat-card>
+  <h1>
+    Channel Directory
+  </h1>
 
-    <mat-card-title>
-      Channel Directory
-    </mat-card-title>
+  <mat-accordion>
 
-    <mat-card-content>
-      <mat-list>
+    <mat-expansion-panel *ngFor="let channel of channels"
+                         #channelPanel="matExpansionPanel">
 
-        <mat-list-item *ngFor="let channel of channels">
+      <mat-expansion-panel-header>
 
-          <mat-icon matListIcon>
-            domain
-          </mat-icon>
+        <mat-icon matListIcon>
+          domain
+        </mat-icon>
 
-          <h2 matLine>
-            {{channel.name}}
+        <span class="channel-panel-header">
+          {{channel.name}}
+        </span>
+
+      </mat-expansion-panel-header>
+
+      <mat-panel-description>
+        {{channel.description}}
+      </mat-panel-description>
+
+      <ng-template matExpansionPanelContent>
+
+        <div class="channel-panel-contents">
+
+          <h2>
+            Request Access to Channel
           </h2>
 
-        </mat-list-item>
+          <mat-form-field>
 
-      </mat-list>
-    </mat-card-content>
+            <textarea matInput
+                      name="description"
+                      #comments
+                      matTextareaAutosize
+                      placeholder="Comments"></textarea>
 
-  </mat-card>
+            <mat-hint>
+              Optional comments to channel owners
+            </mat-hint>
+
+          </mat-form-field>
+
+          <mat-action-row>
+            <button mat-button
+                    (click)="channelPanel.close()">
+              CLOSE
+            </button>
+            <button mat-button
+                    color="primary"
+                    (click)="sendJoinRequest(channel, channelPanel, comments.value)">
+              SEND JOIN REQUEST
+            </button>
+          </mat-action-row>
+
+        </div>
+
+      </ng-template>
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
 
   <div class="groupease-fab-container">
     <a mat-fab

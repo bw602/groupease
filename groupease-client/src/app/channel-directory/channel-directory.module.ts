@@ -6,6 +6,7 @@ import { ChannelDirectoryComponent } from './channel-directory/channel-directory
 import {
   MatButtonModule,
   MatCardModule,
+  MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
@@ -23,6 +24,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MatButtonModule,
     MatCardModule,
+    MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,

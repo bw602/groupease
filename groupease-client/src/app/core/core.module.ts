@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { UserService } from './user.service';
 import { ChannelService } from './channel.service';
 import { throwIfAlreadyLoaded } from './module-import.guard';
+import { ChannelJoinRequestService } from './channel-join-request.service';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { throwIfAlreadyLoaded } from './module-import.guard';
   providers: [
     AuthService,
     ChannelService,
-    UserService
+    UserService,
+    ChannelJoinRequestService
   ]
 })
 export class CoreModule {
