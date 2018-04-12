@@ -3,6 +3,7 @@ package io.github.groupease.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.groupease.user.GroupeaseUserDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -49,6 +50,12 @@ public class GroupeaseUser
     public boolean equals(Object obj)
     {
         return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 
     // Accessors
