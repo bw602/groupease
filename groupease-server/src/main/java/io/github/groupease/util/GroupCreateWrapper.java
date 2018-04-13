@@ -1,11 +1,12 @@
 package io.github.groupease.util;
 
-import javax.annotation.Nonnull;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Helper structure used by the REST framework to encapsulate JSON POSTed to the group
  * create/update APIs
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupCreateWrapper {
     public Long id;
     public Long channel;

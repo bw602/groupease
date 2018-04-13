@@ -1,11 +1,42 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ChannelGroupDirectoryComponent } from './channel-group-directory/channel-group-directory.component';
+import { GroupCreatorComponent } from './group-creator/group-creator.component';
+import { GroupDetailsComponent } from './group-details/group-details.component';
+import { GroupResolverService } from './group-resolver.service';
+import { GroupDetailsHomeComponent } from './group-details-home/group-details-home.component';
 
 const channelGroupRoutes: Routes = [
   {
-    path: '',
+    path: 'directory',
     component: ChannelGroupDirectoryComponent
+  },
+  {
+    path: 'create',
+    component: GroupCreatorComponent
+  },
+  {
+    path: ':groupId',
+    component: GroupDetailsComponent,
+    resolve: {
+      group: GroupResolverService
+    },
+    children: [
+      {
+        path: 'home',
+        component: GroupDetailsHomeComponent
+      },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: '',
+    redirectTo: 'directory',
+    pathMatch: 'full'
   }
 ];
 
