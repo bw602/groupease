@@ -1,5 +1,52 @@
 <div class="user-list-container">
-  <p>
-    user-list works!
-  </p>
+
+  <h2>
+    Groupease Users
+  </h2>
+
+  <mat-accordion>
+
+    <mat-expansion-panel *ngFor="let user of userListObservable | async"
+                         #userPanel="matExpansionPanel">
+
+      <mat-expansion-panel-header class="user-header">
+
+        <img class="user-avatar"
+             [src]="user.pictureUrl" />
+
+        <div class="user-name">
+          <span>
+            {{user.name}}
+          </span>
+        </div>
+
+      </mat-expansion-panel-header>
+
+      <ng-template matExpansionPanelContent>
+
+        <mat-panel-description>
+          {{user.email}}
+        </mat-panel-description>
+
+        <mat-action-row>
+
+          <button mat-button
+                  (click)="userPanel.close()">
+            CLOSE
+          </button>
+
+          <button mat-button
+                  color="primary"
+                  (click)="invite(user, userPanel)">
+            INVITE
+          </button>
+
+        </mat-action-row>
+
+      </ng-template>
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
 </div>
