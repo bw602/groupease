@@ -8,7 +8,7 @@
 
     <a [routerLink]="['/views/channels', channel.id]"
        mat-list-item
-       *ngFor="let channel of channels">
+       *ngFor="let channel of channelListObservable | async">
 
       <mat-icon matListIcon>
         domain

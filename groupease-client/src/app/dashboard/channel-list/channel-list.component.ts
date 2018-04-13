@@ -1,31 +1,23 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, OnInit } from '@angular/core';
 import { ChannelService } from '../../core/channel.service';
 import { Channel } from '../../core/channel';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-channel-list',
   templateUrl: './channel-list.component.html',
   styleUrls: ['./channel-list.component.scss']
 })
-export class ChannelListComponent implements OnInit, OnDestroy {
+export class ChannelListComponent implements OnInit {
 
-  channels: Array<Channel>;
-  channelSubscription: Subscription;
+  channelListObservable: Observable<Channel[]>;
 
   constructor(
     private channelService: ChannelService
   ) { }
 
   ngOnInit(): void {
-    this.channelSubscription = this.channelService.listAll()
-      .subscribe(
-        channels => this.channels = channels
-      );
-  }
-
-  ngOnDestroy(): void {
-    this.channelSubscription.unsubscribe();
+    this.channelListObservable = this.channelService.listWhereMember();
   }
 
 }

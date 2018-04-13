@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Channel } from './channel';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../auth/auth.service';
+import { UserService } from './user.service';
+import 'rxjs/add/operator/switchMap';
+import { User } from './user';
 
 @Injectable()
 export class ChannelService {
@@ -11,7 +14,8 @@ export class ChannelService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) { }
 
   /**
@@ -19,7 +23,7 @@ export class ChannelService {
    *
    * @returns {{headers: HttpHeaders}}
    */
-  private getHttpOptions(): {headers: HttpHeaders} {
+  private getHttpOptions(): {headers: HttpHeaders, params?: HttpParams} {
     return {
       headers: new HttpHeaders()
         .set('Authorization', `Bearer ${this.authService.getAccessToken()}`)
@@ -35,6 +39,32 @@ export class ChannelService {
     return this.http.get<Channel[]>(
       this.channelUrl,
       this.getHttpOptions()
+    );
+  }
+
+  /**
+   * Fetches a list of channels where the current user is a member from the server.
+   *
+   * @returns {Observable<Channel[]>}
+   */
+  listWhereMember(): Observable<Channel[]> {
+
+    return this.userService.getCurrentUser().switchMap(
+      (currentUser: User) => {
+
+        const params: HttpParams = new HttpParams()
+          .set('userId', String(currentUser.id));
+
+        const httpOptions = this.getHttpOptions();
+        httpOptions.params = params;
+
+        console.log(httpOptions);
+
+        return this.http.get<Channel[]>(
+          this.channelUrl,
+          httpOptions
+        );
+      }
     );
   }
 
