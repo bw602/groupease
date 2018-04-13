@@ -3,6 +3,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import static java.util.Objects.requireNonNull;
@@ -48,6 +49,28 @@ public class MemberDao {
         entityManager.persist(newMember);
 
         return newMember;
+    }
+
+    /**
+     * Creates a new {@link Member} in a channel
+     * @param userId The unique ID of the user in the database being added to the channel
+     * @param channelId The unique ID of the channel in the database
+     * @param isOwner Flag indicating whether the user should be an owner of the channel
+     * @return The newly created member object
+     */
+    @Transactional
+    public Member create(long userId, long channelId, boolean isOwner)
+    {
+        LOGGER.debug("MemberDao.create(userId={}, channelId={}, isOwner={}) called", userId, channelId, isOwner);
+
+        Query insertQuery = entityManager.createNativeQuery(
+                "INSERT INTO Member (ChannelID, UserID, IsOwner, LastUpdate) VALUES (:channelId, :userId, :isOwner, CURRENT_TIMESTAMP)");
+        insertQuery.setParameter("channelId", channelId);
+        insertQuery.setParameter("userId", userId);
+        insertQuery.setParameter("isOwner", isOwner);
+        insertQuery.executeUpdate();
+
+        return getById(userId, channelId);
     }
 
     /**
