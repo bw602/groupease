@@ -89,4 +89,9 @@ public class Member implements Serializable
     {
         this.channel = channel;
     }
+
+    public void setOwner(boolean owner) {
+        isOwner = owner;
+    }
+
 }
