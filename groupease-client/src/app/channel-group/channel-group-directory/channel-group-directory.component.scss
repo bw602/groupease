@@ -1,0 +1,28 @@
+.channel-group-directory-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 20px;
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+}
+
+.group-name {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+}
+
+.group-members {
+  margin: 20px 0;
+}
+
+.chip-avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  margin: -8px 12px -8px -12px;
+}

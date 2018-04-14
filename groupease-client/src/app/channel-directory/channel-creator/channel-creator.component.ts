@@ -76,7 +76,7 @@ export class ChannelCreatorComponent implements OnInit {
 
   public getChannelNameErrorMessage(
     errors: ValidationErrors
-  ) {
+  ): string {
     let errorMessage: string;
 
     if (errors.required) {

@@ -1,0 +1,18 @@
+<div class="group-details-container">
+
+  <nav mat-tab-nav-bar>
+
+    <a mat-tab-link
+       routerLink="home"
+       routerLinkActive #homeRoute="routerLinkActive"
+       [active]="homeRoute.isActive">
+      Details
+    </a>
+
+  </nav>
+
+  <router-outlet></router-outlet>
+
+  <pre>{{groupObservable | async | json}}</pre>
+
+</div>
