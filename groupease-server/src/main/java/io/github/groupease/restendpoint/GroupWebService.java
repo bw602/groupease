@@ -17,7 +17,6 @@ import io.github.groupease.model.Group;
 import io.github.groupease.model.Member;
 import io.github.groupease.model.GroupeaseUser;
 import io.github.groupease.user.UserNotFoundException;
-import io.github.groupease.util.GroupCreateWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,7 +150,8 @@ public class GroupWebService {
     public Group update(@PathParam("channelId") long channelId, @PathParam("groupId") long groupId,
                         @Nonnull Group updateGroup)
     {
-        LOGGER.debug("GroupWebService.update(channelUrl={}, groupIdUrl={}, JSON={})", channelId, groupId, updateGroup.toString());
+        LOGGER.debug("GroupWebService.update(channelUrl={}, groupIdUrl={}, JsonName={}, JsonDescription={})",
+                channelId, groupId, updateGroup.getName(), updateGroup.getDescription());
 
         // Make sure that caller is a member of channel
         verifyCurrentUserIsChannelMember(channelId);
@@ -163,7 +163,8 @@ public class GroupWebService {
         }
         if(updateGroup.getId() != groupId)
         {
-            throw new GroupIdMismatchException("JSON group ID " + updateGroup.getId() + "must match group ID " + groupId + " in URL");
+            throw new GroupIdMismatchException("JSON group ID " + updateGroup.getId() +
+                    " must match group ID " + groupId + " in URL");
         }
 
         // The channel ID must be supplied and it must match the URL
@@ -215,12 +216,6 @@ public class GroupWebService {
         }
         else
         {
-            for(int i=0; i<updateGroup.getMembers().size(); i++)
-            {
-                LOGGER.debug("GroupWebService.update *** Member array[{}] - id: {}, name: {}",
-                        i, updateGroup.getMembers().get(i).getGroupeaseUser().getId(),
-                        updateGroup.getMembers().get(i).getGroupeaseUser().getName());
-            }
             // If the submitted membership list is bigger its clearly illegal
             if(updateGroup.getMembers().size() > existingGroup.getMembers().size())
             {
@@ -258,7 +253,7 @@ public class GroupWebService {
             else
             {
                 // Same size list. For now, just check that the membership IDs are the same
-                // Probably should come back later and add more detailed checks, but time-crunch
+                // Probably should come back later and add more detailed checks
                 for (int i = 0; i < existingGroup.getMembers().size(); i++) {
                     GroupeaseUser temp = existingGroup.getMembers().get(i).getGroupeaseUser();
                     if(updateGroup.getMembers().stream()
