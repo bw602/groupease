@@ -93,7 +93,7 @@ public class GroupWebService {
     /**
      * Creates a new {@link Group} in the channel. Only channel members can create a group
      * @param channelId The ID of the channel to create the group in
-     * @param newGroup A {@link Group} that contains the group name and other POSTed JSON values
+     * @param newGroup Representation of a new {@link Group} to create built from the POSTed JSON values
      * @return The newly created group
      */
     @POST
@@ -140,7 +140,7 @@ public class GroupWebService {
      * Updates a {@link Group}
      * @param channelId The ID of the channel the group is part of
      * @param groupId The ID of the group
-     * @param updateGroup The {@link Group} object that contains the uploaded JSON wrapped fields
+     * @param updateGroup The changes to make to an existing {@link Group} constructed from the POSTed JSON
      * @return The revised group object
      */
     @PUT
@@ -168,10 +168,6 @@ public class GroupWebService {
         }
 
         // The channel ID must be supplied and it must match the URL
-        /*if(updateGroup.getChannelId() == null)
-        {
-            throw new ChannelIdMismatchException("The channel ID must be supplied in the JSON");
-        }*/
         if(channelId != updateGroup.getChannelId())
         {
             throw new ChannelIdMismatchException("JSON channel ID " + updateGroup.getChannelId() +
