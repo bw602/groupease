@@ -1,0 +1,17 @@
+@import '~@angular/material/theming';
+
+/* Include only once per app! */
+@include mat-core();
+
+/* Angular Material prebuilt light themes. */
+//@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+//@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Angular Material prebuilt dark themes. */
+//@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
+//@import '~@angular/material/prebuilt-themes/purple-green.css';
+
+/* Use our custom groupease theme. */
+@import '~groupease-theme.scss';
+
+@include angular-material-theme($groupease-theme);

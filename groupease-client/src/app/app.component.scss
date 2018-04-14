@@ -1,0 +1,24 @@
+app-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  z-index: 10;
+}
+
+router-outlet {
+  margin-top: 64px;
+}
+
+@media (max-width: 599px) {
+
+  app-toolbar {
+    height: 56px;
+  }
+
+  router-outlet {
+    margin-top: 56px;
+  }
+
+}

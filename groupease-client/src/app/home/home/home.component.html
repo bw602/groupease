@@ -1,7 +1,73 @@
-<div class="home-container">
+<header>
+  <h1 class="mat-display-3">
+    Groupease
+  </h1>
+  <h2>
+    Create groups with ease.
+  </h2>
+  <div class="header-action"
+       *ngIf="!authService.isAuthenticated()">
+    <button (click)="authService.login()"
+            mat-raised-button
+            color="accent">
+      GET STARTED
+    </button>
+  </div>
+</header>
 
-  <p>
-    home page!
-  </p>
+<div class="home-content">
+
+  <mat-icon color="primary">
+    group
+  </mat-icon>
+
+  <div>
+    <h1>
+      Group to work, don't work to group
+    </h1>
+    <p>
+      Groupease presents all the knowledge workers need to form compatible and productive groups in a simple interface.
+      Don't waste time.
+      Form the best groups quickly through informed decisions based on a member's skills, availability, and goals.
+    </p>
+  </div>
+
+</div>
+
+<div class="home-content">
+
+  <mat-icon color="primary">
+    group_work
+  </mat-icon>
+
+  <div>
+    <h1>
+      Channel your organized self
+    </h1>
+    <p>
+      Groupease is organized into channels.
+      Anyone can create a channel at any time for any purpose,
+      so there is a private space for an organization, department, or classroom to meet.
+    </p>
+  </div>
+
+</div>
+
+<div class="home-content">
+
+  <mat-icon color="primary">
+    search
+  </mat-icon>
+
+  <div>
+    <h1>
+      Peer at your peers
+    </h1>
+    <p>
+      Members complete brief per-channel profiles about their skills, interests, and goals.
+      Groupease channels make it easy to see all their members,
+      so potential teammates can learn about each other prior to forming groups.
+    </p>
+  </div>
 
 </div>

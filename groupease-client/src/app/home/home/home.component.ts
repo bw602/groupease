@@ -1,4 +1,5 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -7,10 +8,12 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  /* Apply groupease-view CSS class to the component element. */
-  @HostBinding('class.groupease-view') true;
+  /* Apply CSS class to the component element. */
+  @HostBinding('class.groupease-root') true;
 
-  constructor() { }
+  constructor(
+    public authService: AuthService
+  ) { }
 
   ngOnInit() {
   }

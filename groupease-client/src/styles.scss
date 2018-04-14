@@ -1,10 +1,5 @@
-/* Material prebuilt light themes. */
-@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
-//@import '~@angular/material/prebuilt-themes/indigo-pink.css';
-
-/* Material prebuilt dark themes. */
-//@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
-//@import '~@angular/material/prebuilt-themes/purple-green.css';
+/* Include Angular Material theme. */
+@import '~material-theme-config.scss';
 
 /* Ensure body at least full browser height. */
 body {
