@@ -1,0 +1,26 @@
+$headingFontSize: 24px;
+$headingLineHeight: 32px;
+$headingSpacing: 16px;
+
+mat-card {
+  margin-bottom: 20px;
+}
+
+.group-summary-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.group-summary-title h1 {
+  font-size: $headingFontSize;
+  line-height: $headingLineHeight;
+  margin: 0 0 $headingSpacing 0;
+}
+
+.group-summary-title mat-icon {
+  font-size: $headingLineHeight;
+  height: $headingLineHeight;
+  width: $headingLineHeight;
+  margin: 0 $headingSpacing $headingSpacing 0;
+}

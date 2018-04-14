@@ -1,3 +1,18 @@
-<p>
-  group-details-home works!
-</p>
+<div class="group-details-home-container"
+     *ngIf="groupObservable | async as group">
+
+  <app-group-summary [group]="group"></app-group-summary>
+
+  <app-group-member-list [members]="group.members"></app-group-member-list>
+
+</div>
+
+<div class="groupease-fab-container">
+  <a mat-fab
+     matTooltip="Back to groups"
+     routerLink="../..">
+    <mat-icon aria-label="Back to groups">
+      arrow_back
+    </mat-icon>
+  </a>
+</div>

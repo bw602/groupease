@@ -20,13 +20,13 @@ public class GroupeaseUser
     private Long id;
     private String providerUserId;
     private String name;
-    private String nickName;
+    private String nickname;
     private String email;
     private String pictureUrl;
 
     @UpdateTimestamp
     @Column(name = "lastUpdatedOn")
-    private Instant lastUpdate;
+    private Instant lastUpdatedOn;
 
     @OneToMany(mappedBy = "userProfile")
     private List<Member> memberList;
@@ -42,7 +42,7 @@ public class GroupeaseUser
     {
         providerUserId = authZeroUser.getProviderUserId();
         name = authZeroUser.getName();
-        nickName = authZeroUser.getNickname();
+        nickname = authZeroUser.getNickname();
         email = authZeroUser.getEmail();
         pictureUrl = authZeroUser.getPictureUrl();
     }
@@ -91,8 +91,8 @@ public class GroupeaseUser
      * Gets the user's preferred nickname
      * @return The user's nickname
      */
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
     /**
@@ -115,8 +115,8 @@ public class GroupeaseUser
      * Gets the time the persisted version of this object was last modified
      * @return The last update time
      */
-    public Instant getLastUpdate() {
-        return lastUpdate;
+    public Instant getLastUpdatedOn() {
+        return lastUpdatedOn;
     }
 
     /**
