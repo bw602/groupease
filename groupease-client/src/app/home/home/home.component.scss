@@ -1,5 +1,83 @@
-.home-container {
+@import '~groupease-theme.scss';
+
+$iconHeight: 125px;
+$iconSpacing: 32px;
+
+header {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: mat-color($primary, default-contrast);
+  background-color: mat-color($primary);
+}
+
+header h1 {
+  font-size: 56px;
+  font-weight: 300;
+  line-height: 56px;
+  margin: 15px 5px;
+  padding: 0;
+}
+
+header h2 {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 28px;
+  margin: 15px 0 25px 0;
+  padding: 0;
+}
+
+.header-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 15px 0 25px 0;
+  padding: 0;
+}
+
+.home-content {
+  display: flex;
+  flex-direction: row;
   flex: 1 1 auto;
+  align-items: start;
+  justify-content: center;
+  margin: 32px 20%;
+  padding: 0;
+}
+
+.home-content mat-icon {
+  font-size: $iconHeight;
+  line-height: $iconHeight;
+  height: $iconHeight;
+  width: $iconHeight;
+  margin: 0 $iconSpacing 0 0;
+}
+
+.home-content div {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-content h1 {
+  font-size: 24px;
+  line-height: 2;
+}
+
+.home-content p {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@media (max-width: 599px) {
+
+  .home-content mat-icon {
+    display: none;
+  }
+
+  .home-content {
+    margin: 16px;
+  }
+
 }

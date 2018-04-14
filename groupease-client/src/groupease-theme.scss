@@ -1,0 +1,18 @@
+@import '~@angular/material/theming';
+
+$groupease-primary: mat-palette($mat-deep-purple);
+$groupease-accent: mat-palette($mat-amber, A200, A100, A400);
+$groupease-warn: mat-palette($mat-red);
+
+$groupease-theme: mat-light-theme(
+    $groupease-primary,
+    $groupease-accent,
+    $groupease-warn
+);
+
+/* Variables for styling custom components. */
+$foreground: map-get($groupease-theme, foreground);
+$background: map-get($groupease-theme, background);
+$primary: map-get($groupease-theme, primary);
+$accent: map-get($groupease-theme, accent);
+$warn: map-get($groupease-theme, warn);
