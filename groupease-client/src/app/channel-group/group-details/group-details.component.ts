@@ -12,8 +12,8 @@ import 'rxjs/add/observable/of';
 })
 export class GroupDetailsComponent implements OnInit {
 
-  /* Apply groupease-view CSS class to the component element. */
-  @HostBinding('class.groupease-view') true;
+  /* Apply CSS class to the component element. */
+  @HostBinding('class.groupease-root') true;
 
   public groupObservable: Observable<Group>;
 
