@@ -1,16 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChannelGroupDirectoryComponent } from './channel-group-directory.component';
+import { GroupCreatorComponent } from './group-creator.component';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSnackBarModule } from '@angular/material';
 import { GroupService } from '../../core/group.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Channel } from '../../core/channel';
-import { MatButtonModule, MatChipsModule, MatExpansionModule, MatIconModule, MatTooltipModule } from '@angular/material';
-import { RouterTestingModule } from '@angular/router/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('ChannelGroupDirectoryComponent', () => {
-  let component: ChannelGroupDirectoryComponent;
-  let fixture: ComponentFixture<ChannelGroupDirectoryComponent>;
+describe('GroupCreatorComponent', () => {
+  let component: GroupCreatorComponent;
+  let fixture: ComponentFixture<GroupCreatorComponent>;
   let groupService: jasmine.SpyObj<GroupService>;
   let channel: Channel;
 
@@ -25,13 +27,13 @@ describe('ChannelGroupDirectoryComponent', () => {
     groupService = jasmine.createSpyObj(
       'GroupService',
       [
-        'listAllInChannel'
+        'createGroup'
       ]
     );
 
     TestBed.configureTestingModule({
       declarations: [
-        ChannelGroupDirectoryComponent
+        GroupCreatorComponent
       ],
       providers: [
         {
@@ -48,19 +50,19 @@ describe('ChannelGroupDirectoryComponent', () => {
                     channel: channel
                   }
                 )
-              },
-              snapshot: {}
-            },
-            snapshot: {}
+              }
+            }
           }
         }
       ],
       imports: [
+        NoopAnimationsModule,
+        FormsModule,
         MatButtonModule,
-        MatChipsModule,
-        MatExpansionModule,
-        MatIconModule,
-        MatTooltipModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSnackBarModule,
         RouterTestingModule
       ]
     })
@@ -68,14 +70,12 @@ describe('ChannelGroupDirectoryComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChannelGroupDirectoryComponent);
+    fixture = TestBed.createComponent(GroupCreatorComponent);
     component = fixture.componentInstance;
-    groupService.listAllInChannel.and.returnValue(Observable.of([]));
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 });

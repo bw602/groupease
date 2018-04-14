@@ -1,6 +1,7 @@
 package io.github.groupease.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.github.groupease.user.GroupeaseUserDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name="GroupeaseUser")
 public class GroupeaseUser

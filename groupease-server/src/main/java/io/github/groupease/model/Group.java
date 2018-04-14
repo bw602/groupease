@@ -1,7 +1,6 @@
 package io.github.groupease.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.CreationTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
@@ -15,6 +14,7 @@ import javax.persistence.*;
 /**
  * Represents a Group being formed in a Channel (course section)
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "ChannelGroup")
 public final class Group implements Serializable{
@@ -80,7 +80,6 @@ public final class Group implements Serializable{
      * Indicates whether the group is full and cannot accept additional members
      * @return True when the group is full
      */
-    @JsonIgnore
     public boolean isFull() { return isFull; }
 
     /**

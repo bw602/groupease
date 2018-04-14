@@ -8,7 +8,8 @@ import {
   MatCardModule,
   MatExpansionModule,
   MatIconModule,
-  MatListModule, MatSnackBar, MatSnackBarModule,
+  MatListModule,
+  MatSnackBarModule,
   MatTabsModule,
   MatTooltipModule
 } from '@angular/material';

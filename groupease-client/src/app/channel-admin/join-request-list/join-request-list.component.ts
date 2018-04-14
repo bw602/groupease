@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChannelJoinRequestService } from '../../core/channel-join-request.service';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../../core/channel';

@@ -58,8 +58,6 @@ export class ChannelService {
         const httpOptions = this.getHttpOptions();
         httpOptions.params = params;
 
-        console.log(httpOptions);
-
         return this.http.get<Channel[]>(
           this.channelUrl,
           httpOptions
