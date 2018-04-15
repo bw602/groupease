@@ -138,9 +138,7 @@ public class ChannelJoinRequestService
         ChannelJoinRequest existing = requestDao.getForUser(channelId, profile.getId());
         if(existing != null)
         {
-            // The user already has a join request for this channel, so don't allow another to be created
-            // Just return the one that already exists
-            return existing;
+            throw new DuplicateChannelJoinRequestException("You have already sent a request to join that channel");
         }
 
         // Check if the user is already a member of the channel
