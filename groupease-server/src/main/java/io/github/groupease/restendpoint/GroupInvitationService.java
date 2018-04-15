@@ -290,7 +290,7 @@ public class GroupInvitationService {
         {
             throw new UserMismatchException("Logged in user does not match the provided user id");
         }
-        
+
         if(loggedOnUser.getMemberList().stream().noneMatch(member -> member.getChannel().getId() == channelId))
         {
             throw new NotChannelMemberException(

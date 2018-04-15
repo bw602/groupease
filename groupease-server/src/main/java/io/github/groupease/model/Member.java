@@ -1,15 +1,23 @@
 package io.github.groupease.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
@@ -21,7 +29,10 @@ public class Member implements Serializable
     private Long id;
     private boolean isOwner;
 
-    // Issue #31 - Add additional per-channel profile fields here once determined
+    /* TODO: Issue #31 - Additional per-channel profile fields. */
+    private String skills;
+    private String availability;
+    private String goals;
 
     @UpdateTimestamp
     private Instant lastUpdate;
@@ -67,7 +78,6 @@ public class Member implements Serializable
      *
      * @return The Channel object
      */
-    @JsonIgnore
     public Channel getChannel() {
         return channel;
     }
@@ -79,6 +89,18 @@ public class Member implements Serializable
      */
     public Instant getLastUpdate() {
         return lastUpdate;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public String getGoals() {
+        return goals;
+    }
+
+    public String getAvailability() {
+        return availability;
     }
 
     // Setter functions
@@ -94,6 +116,24 @@ public class Member implements Serializable
 
     public void setOwner(boolean owner) {
         isOwner = owner;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public void setGoals(String goals) {
+        this.goals = goals;
+    }
+
+    public void setAvailability(String availability) {
+        this.availability = availability;
+    }
+
+    @Override
+    @Nonnull
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

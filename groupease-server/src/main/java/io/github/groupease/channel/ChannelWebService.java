@@ -78,7 +78,7 @@ public class ChannelWebService {
     public Channel getById(
             @PathParam("id") Long id
     ) {
-        LOGGER.debug("ChannelWebService.getById({}) called.", id);
+        LOGGER.debug("ChannelWebService.getForUser({}) called.", id);
         return channelService.getById(id);
     }
 
@@ -88,7 +88,7 @@ public class ChannelWebService {
      * @param id the ID of the {@link Channel} instance to update.
      * @param toUpdate the {@link ChannelDto} instance to save.
      * @return the updated {@link Channel} instance.
-     * @throws IllegalArgumentException if id and toUpdate.getId() do NOT match.
+     * @throws ChannelIdMismatchException if id and toUpdate.getId() do NOT match.
      */
     @PUT
     @Path("{id}")

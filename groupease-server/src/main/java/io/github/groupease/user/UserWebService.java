@@ -69,7 +69,7 @@ public class UserWebService {
     public GroupeaseUser getById(
             @PathParam("id") Long id
     ) {
-        LOGGER.debug("UserWebService.getById({}) called.", id);
+        LOGGER.debug("UserWebService.getForUser({}) called.", id);
         return userService.getById(id);
     }
 

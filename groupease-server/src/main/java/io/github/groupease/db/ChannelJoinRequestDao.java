@@ -88,7 +88,7 @@ public class ChannelJoinRequestDao
      */
     public ChannelJoinRequest getById(long id)
     {
-        LOGGER.debug("ChannelJoinRequestDao.getById({})", id);
+        LOGGER.debug("ChannelJoinRequestDao.getForUser({})", id);
 
         return entityManager.find(ChannelJoinRequest.class, id);
     }
