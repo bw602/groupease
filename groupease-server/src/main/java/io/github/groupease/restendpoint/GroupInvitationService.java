@@ -158,8 +158,7 @@ public class GroupInvitationService {
         GroupInvitation existingInvitation = invitationDao.get(userId, invitation.getGroup().getId());
         if(existingInvitation != null)
         {
-            // If there is already an invitation, don't create another one. Return the existing one as a reminder
-            return existingInvitation;
+            throw new DuplicateGroupInvitationException("An invitation has already been sent to that user");
         }
 
         // Verify that the recipient isn't already a group member

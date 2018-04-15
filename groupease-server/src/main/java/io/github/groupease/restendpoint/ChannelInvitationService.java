@@ -125,8 +125,7 @@ public class ChannelInvitationService {
                 invitationDao.listByUserAndChannel(userId, wrapper.channel.id);
         if(!invitations.isEmpty())
         {
-            // If there is already an invitation, don't create another one. Return the existing one as a reminder
-            return invitations.get(0);
+            throw new DuplicateChannelInvitationException("An invitation has already been sent to that user");
         }
 
         // Verify that the recipient isn't already a member
