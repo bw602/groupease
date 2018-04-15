@@ -125,7 +125,7 @@ public class DefaultChannelServiceTest {
 
         /* Train the mocks. */
         when(userService.updateCurrentUser()).thenReturn(groupeaseUser);
-        when(memberDao.getById(groupeaseUser.getId(), channel.getId())).thenReturn(member);
+        when(memberDao.getForUser(groupeaseUser.getId(), channel.getId())).thenReturn(member);
         when(channelDao.update(channelDto)).thenReturn(expected);
 
         /* Make the call. */
@@ -144,7 +144,7 @@ public class DefaultChannelServiceTest {
     public void testUpdateWhenNotMember() throws Exception {
         /* Train the mocks. */
         when(userService.updateCurrentUser()).thenReturn(groupeaseUser);
-        when(memberDao.getById(groupeaseUser.getId(), channel.getId())).thenReturn(null);
+        when(memberDao.getForUser(groupeaseUser.getId(), channel.getId())).thenReturn(null);
 
         /* Make the call. */
         toTest.update(channelDto);
@@ -163,7 +163,7 @@ public class DefaultChannelServiceTest {
 
         /* Train the mocks. */
         when(userService.updateCurrentUser()).thenReturn(groupeaseUser);
-        when(memberDao.getById(groupeaseUser.getId(), channel.getId())).thenReturn(member);
+        when(memberDao.getForUser(groupeaseUser.getId(), channel.getId())).thenReturn(member);
 
         /* Make the call. */
         toTest.update(channelDto);
@@ -299,7 +299,7 @@ public class DefaultChannelServiceTest {
 
         /* Train the mocks. */
         when(userService.updateCurrentUser()).thenReturn(groupeaseUser);
-        when(memberDao.getById(groupeaseUser.getId(), channel.getId())).thenReturn(member);
+        when(memberDao.getForUser(groupeaseUser.getId(), channel.getId())).thenReturn(member);
 
         /* Make the call. */
         toTest.delete(channel.getId());
@@ -317,7 +317,7 @@ public class DefaultChannelServiceTest {
     public void testDeleteWhenNotMember() throws Exception {
         /* Train the mocks. */
         when(userService.updateCurrentUser()).thenReturn(groupeaseUser);
-        when(memberDao.getById(groupeaseUser.getId(), channel.getId())).thenReturn(null);
+        when(memberDao.getForUser(groupeaseUser.getId(), channel.getId())).thenReturn(null);
 
         /* Make the call. */
         toTest.delete(channel.getId());
@@ -336,7 +336,7 @@ public class DefaultChannelServiceTest {
 
         /* Train the mocks. */
         when(userService.updateCurrentUser()).thenReturn(groupeaseUser);
-        when(memberDao.getById(groupeaseUser.getId(), channel.getId())).thenReturn(member);
+        when(memberDao.getForUser(groupeaseUser.getId(), channel.getId())).thenReturn(member);
 
         /* Make the call. */
         toTest.delete(channel.getId());

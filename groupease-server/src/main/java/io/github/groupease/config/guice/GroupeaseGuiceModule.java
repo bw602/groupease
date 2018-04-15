@@ -8,6 +8,7 @@ import com.google.inject.AbstractModule;
 import com.typesafe.config.Config;
 import io.github.groupease.auth.AuthGuiceModule;
 import io.github.groupease.channel.ChannelGuiceModule;
+import io.github.groupease.channelmember.ChannelMemberGuiceModule;
 import io.github.groupease.config.database.DatabaseGuiceModule;
 import io.github.groupease.config.jersey.ClientProvider;
 import io.github.groupease.user.UserGuiceModule;
@@ -38,6 +39,7 @@ public class GroupeaseGuiceModule extends AbstractModule {
         /* Install other modules. */
         install(new AuthGuiceModule());
         install(new ChannelGuiceModule());
+        install(new ChannelMemberGuiceModule());
         install(new DatabaseGuiceModule(config));
         install(new GroupeaseServletGuiceModule());
         install(new UserGuiceModule());

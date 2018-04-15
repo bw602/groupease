@@ -75,7 +75,7 @@ public class GroupWebService {
     @Nonnull
     public Group getById(@PathParam("channelId") long channelId, @PathParam("groupId") long groupId)
     {
-        LOGGER.debug("GroupWebService.getById(channel={}, group={})", channelId, groupId);
+        LOGGER.debug("GroupWebService.getForUser(channel={}, group={})", channelId, groupId);
 
         // Make sure that caller is a member of channel
         verifyCurrentUserIsChannelMember(channelId);

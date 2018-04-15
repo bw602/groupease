@@ -67,7 +67,7 @@ public class GroupeaseUserDao
      */
     public GroupeaseUser getById(long userId)
     {
-        LOGGER.debug("GroupeaseUserDao.getById({})", userId);
+        LOGGER.debug("GroupeaseUserDao.getForUser({})", userId);
 
         return entityManager.find(GroupeaseUser.class, userId);
     }

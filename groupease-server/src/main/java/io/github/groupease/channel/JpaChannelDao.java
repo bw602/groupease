@@ -96,7 +96,7 @@ public class JpaChannelDao implements ChannelDao {
     public Channel getById(
             long id
     ) {
-        LOGGER.debug("JpaChannelDao.getById({}) called.", id);
+        LOGGER.debug("JpaChannelDao.getForUser({}) called.", id);
 
         ChannelDto channelDto = entityManager.find(
                 ChannelDto.class,

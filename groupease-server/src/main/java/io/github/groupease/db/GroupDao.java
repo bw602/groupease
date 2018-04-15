@@ -57,7 +57,7 @@ public class GroupDao {
      */
     public Group get(long id)
     {
-        LOGGER.debug("GroupDao.getById({}) called", id);
+        LOGGER.debug("GroupDao.getForUser({}) called", id);
 
         return entityManager.find(Group.class, id);
     }

@@ -71,7 +71,7 @@ public class DefaultChannelService implements ChannelService {
     public Channel getById(
             long id
     ) {
-        LOGGER.debug("DefaultChannelService.getById({}) called.", id);
+        LOGGER.debug("DefaultChannelService.getForUser({}) called.", id);
         return channelDao.getById(id);
     }
 
@@ -97,7 +97,7 @@ public class DefaultChannelService implements ChannelService {
         GroupeaseUser currentUser = getCurrentUser();
 
         /* Get channel member. */
-        Member member = memberDao.getById(
+        Member member = memberDao.getForUser(
                 currentUser.getId(),
                 toUpdate.getId()
         );
@@ -159,7 +159,7 @@ public class DefaultChannelService implements ChannelService {
         GroupeaseUser currentUser = getCurrentUser();
 
         /* Get channel member. */
-        Member member = memberDao.getById(
+        Member member = memberDao.getForUser(
                 currentUser.getId(),
                 id
         );

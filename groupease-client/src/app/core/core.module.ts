@@ -7,6 +7,7 @@ import { throwIfAlreadyLoaded } from './module-import.guard';
 import { ChannelJoinRequestService } from './channel-join-request.service';
 import { ChannelInvitationService } from './channel-invitation.service';
 import { GroupService } from './group.service';
+import { MemberService } from './member.service';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { GroupService } from './group.service';
     UserService,
     ChannelJoinRequestService,
     ChannelInvitationService,
-    GroupService
+    GroupService,
+    MemberService
   ]
 })
 export class CoreModule {
