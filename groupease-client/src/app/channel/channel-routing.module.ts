@@ -15,6 +15,13 @@ const channelRoutes: Routes = [
         component: ChannelHomeComponent
       },
       {
+        path: 'profile',
+        loadChildren: 'app/channel-profile/channel-profile.module#ChannelProfileModule',
+        canLoad: [
+          AuthGuard
+        ]
+      },
+      {
         path: 'members',
         loadChildren: 'app/channel-member/channel-member.module#ChannelMemberModule',
         canLoad: [

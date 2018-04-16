@@ -1,0 +1,23 @@
+<div class="profile-home-container">
+
+  <nav mat-tab-nav-bar>
+
+    <a mat-tab-link
+       routerLink="edit"
+       routerLinkActive #editRoute="routerLinkActive"
+       [active]="editRoute.isActive">
+      Edit
+    </a>
+
+    <a mat-tab-link
+       routerLink="group-invitations"
+       routerLinkActive #invitationsRoute="routerLinkActive"
+       [active]="invitationsRoute.isActive">
+      Group Invitations
+    </a>
+
+  </nav>
+
+  <router-outlet></router-outlet>
+
+</div>

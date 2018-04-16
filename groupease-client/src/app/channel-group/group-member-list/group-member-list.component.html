@@ -41,6 +41,42 @@
           </p>
         </mat-list-item>
 
+        <mat-list-item>
+          <mat-icon matListIcon>
+            settings
+          </mat-icon>
+          <p matLine>
+            Channel Owner: {{member.owner? 'YES' : 'NO'}}
+          </p>
+        </mat-list-item>
+
+        <mat-list-item *ngIf="member.availability">
+          <mat-icon matListIcon>
+            date_range
+          </mat-icon>
+          <p matLine>
+            {{member.availability}}
+          </p>
+        </mat-list-item>
+
+        <mat-list-item *ngIf="member.goals">
+          <mat-icon matListIcon>
+            assessment
+          </mat-icon>
+          <p matLine>
+            {{member.goals}}
+          </p>
+        </mat-list-item>
+
+        <mat-list-item *ngIf="member.skills">
+          <mat-icon matListIcon>
+            done
+          </mat-icon>
+          <p matLine>
+            {{member.skills}}
+          </p>
+        </mat-list-item>
+
       </mat-list>
 
     </ng-template>
