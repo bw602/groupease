@@ -1,0 +1,32 @@
+.profile-form-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 20px;
+}
+
+.profile-form-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  justify-content: space-between;
+}
+
+.profile-fields-list {
+  margin-bottom: 20px;
+}
+
+mat-list.profile-fields-list mat-list-item mat-icon {
+  padding: 8px;
+}
+
+mat-form-field {
+  margin-bottom: 20px;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
