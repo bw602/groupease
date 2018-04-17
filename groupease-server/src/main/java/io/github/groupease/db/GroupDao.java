@@ -57,7 +57,7 @@ public class GroupDao {
      */
     public Group get(long id)
     {
-        LOGGER.debug("GroupDao.getById({}) called", id);
+        LOGGER.debug("GroupDao.getForUser({}) called", id);
 
         return entityManager.find(Group.class, id);
     }
@@ -116,5 +116,18 @@ public class GroupDao {
         entityManager.persist(newGroup);
 
         return newGroup;
+    }
+
+    /**
+     * Merges changes to the group back into the database. Really only needed when changing the membership. Do not
+     * use to save a new group. Use the create method instead.
+     * @param group The {@link Group} to merge
+     */
+    @Transactional
+    public void merge(@Nonnull Group group)
+    {
+        LOGGER.debug("GroupDao.merge");
+
+        entityManager.merge(group);
     }
 }

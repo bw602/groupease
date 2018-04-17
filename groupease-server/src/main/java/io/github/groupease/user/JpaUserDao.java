@@ -68,7 +68,7 @@ public class JpaUserDao implements UserDao {
     public GroupeaseUser getById(
             long id
     ) {
-        LOGGER.debug("JpaUserDao.getById({}) called.", id);
+        LOGGER.debug("JpaUserDao.getForUser({}) called.", id);
 
         GroupeaseUserDto groupeaseUserDto = entityManager.find(
                 GroupeaseUserDto.class,

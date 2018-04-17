@@ -4,14 +4,26 @@ import { ChannelService } from './channel.service';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '../auth/auth.service';
+import { UserService } from './user.service';
 
 describe('ChannelService', () => {
+
+  let authService: jasmine.SpyObj<AuthService>;
+  let userService: jasmine.SpyObj<UserService>;
+
   beforeEach(() => {
 
-    const authService = jasmine.createSpyObj(
+    authService = jasmine.createSpyObj(
       'AuthService',
       [
         'isAuthenticated'
+      ]
+    );
+
+    userService = jasmine.createSpyObj(
+      'UserService',
+      [
+        'getCurrentUser'
       ]
     );
 
@@ -21,6 +33,10 @@ describe('ChannelService', () => {
         {
           provide: AuthService,
           useValue: authService
+        },
+        {
+          provide: UserService,
+          useValue: userService
         }
       ],
       imports: [

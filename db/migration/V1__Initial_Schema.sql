@@ -21,6 +21,9 @@ CREATE TABLE Member (
     ChannelId BIGSERIAL NOT NULL REFERENCES Channel,
     IsOwner BOOLEAN NOT NULL DEFAULT FALSE,
     -- Issue #31: Per channel profile fields to go here later
+    skills TEXT NULL,
+    availability TEXT NULL,
+    goals TEXT NULL,
     LastUpdate TIMESTAMP NOT NULL
 );
 
@@ -60,8 +63,8 @@ CREATE TABLE ChannelJoinRequest (
 CREATE TABLE GroupInvitation (
     ID BIGSERIAL PRIMARY KEY,
     GroupID BIGSERIAL NOT NULL REFERENCES ChannelGroup ON DELETE CASCADE,
-    SenderID BIGSERIAL NOT NULL REFERENCES GroupeaseUser ON DELETE CASCADE,
-    RecipientID BIGSERIAL NOT NULL REFERENCES GroupeaseUser ON DELETE CASCADE,
+    SenderID BIGSERIAL NOT NULL REFERENCES Member ON DELETE CASCADE,
+    RecipientID BIGSERIAL NOT NULL REFERENCES Member ON DELETE CASCADE,
     Comments TEXT,
     LastUpdate TIMESTAMP NOT NULL
 );
@@ -102,19 +105,27 @@ INSERT INTO GroupeaseUser (
 ) ;
 
 INSERT INTO Member (
-    ChannelID, UserID, IsOwner, LastUpdate
+    ChannelID, UserID, IsOwner, skills, availability, goals, LastUpdate
 ) VALUES (
     (SELECT id FROM Channel WHERE Name='CS6675-Spring-2018'),
     (SELECT ID FROM GroupeaseUser WHERE nickname='gpb01'),
-    TRUE, current_timestamp
+    TRUE,
+    'Java, JavaScript, SQL',
+    'Weekdays: 4pm - 10pm; Weekends: Any time',
+    'Get an A and learn Angular',
+    CURRENT_TIMESTAMP
 );
 
 INSERT INTO Member (
-    ChannelID, UserID, IsOwner, LastUpdate
+    ChannelID, UserID, IsOwner, skills, availability, goals, LastUpdate
 ) VALUES (
     (SELECT id FROM Channel WHERE Name='CS8803-BDS-Fall-2017'),
     (SELECT ID FROM GroupeaseUser WHERE nickname='gpb01'),
-    TRUE, current_timestamp
+    TRUE,
+    'Hadoop and Spark',
+    'Mondays 7- 8pm',
+    'Do just enough to pass the class',
+    CURRENT_TIMESTAMP
 );
 
 INSERT INTO ChannelGroup (

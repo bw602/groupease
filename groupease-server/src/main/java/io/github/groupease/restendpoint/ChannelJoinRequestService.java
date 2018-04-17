@@ -34,7 +34,7 @@ public class ChannelJoinRequestService
     private final Provider<String> currentUserIdProvider;
 
     @Inject
-    public ChannelJoinRequestService(@Nonnull ChannelJoinRequestDao requestDao, 
+    public ChannelJoinRequestService(@Nonnull ChannelJoinRequestDao requestDao,
                                      @Nonnull MemberDao memberDao, @Nonnull GroupeaseUserDao userDao,
                                      @Nonnull @CurrentUserId Provider<String> currentUserIdProvider)
     {
@@ -126,7 +126,7 @@ public class ChannelJoinRequestService
     @Transactional
     public ChannelJoinRequest create(@PathParam("channelId") long channelId, @Nonnull CommentWrapper wrapper)
     {
-        LOGGER.trace("ChannelJoinRequestService.create(channel={}, comments={})", channelId, wrapper.comments);
+        LOGGER.debug("ChannelJoinRequestService.create(channel={}, comments={})", channelId, wrapper.comments);
 
         GroupeaseUser profile = userDao.getByProviderId(currentUserIdProvider.get());
         if(profile == null)
@@ -138,9 +138,7 @@ public class ChannelJoinRequestService
         ChannelJoinRequest existing = requestDao.getForUser(channelId, profile.getId());
         if(existing != null)
         {
-            // The user already has a join request for this channel, so don't allow another to be created
-            // Just return the one that already exists
-            return existing;
+            throw new DuplicateChannelJoinRequestException("You have already sent a request to join that channel");
         }
 
         // Check if the user is already a member of the channel

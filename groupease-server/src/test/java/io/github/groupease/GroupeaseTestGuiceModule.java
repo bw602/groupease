@@ -25,6 +25,7 @@ import io.github.groupease.channel.ChannelDao;
 import io.github.groupease.channel.ChannelDto;
 import io.github.groupease.channel.ChannelService;
 import io.github.groupease.config.guice.NoCache;
+import io.github.groupease.db.MemberDao;
 import io.github.groupease.exception.mapper.GroupeaseClientError;
 import io.github.groupease.user.GroupeaseUser;
 import io.github.groupease.user.GroupeaseUserDto;
@@ -79,6 +80,9 @@ public class GroupeaseTestGuiceModule extends AbstractModule {
     private JWT jwt;
 
     @Mock
+    private MemberDao memberDao;
+
+    @Mock
     private ResourceInfo resourceInfo;
 
     @Mock
@@ -113,6 +117,7 @@ public class GroupeaseTestGuiceModule extends AbstractModule {
         bind(JwkProvider.class).toInstance(jwkProvider);
         bind(JWT.class).toInstance(jwt);
         bind(JwkProvider.class).annotatedWith(NoCache.class).toInstance(jwkProvider);
+        bind(MemberDao.class).toInstance(memberDao);
         bind(ResourceInfo.class).toInstance(resourceInfo);
         bind(RSAPublicKey.class).toInstance(rsaPublicKey);
         bind(UserDao.class).toInstance(userDao);

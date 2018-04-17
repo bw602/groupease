@@ -1,0 +1,157 @@
+<div *ngIf="member"
+     class="profile-form-container">
+
+  <form #memberForm="ngForm"
+        (ngSubmit)="onSubmit()">
+
+    <mat-card>
+
+      <mat-card-title>
+        Channel member profile
+      </mat-card-title>
+
+      <mat-card-content class="profile-form-card-content">
+
+        <mat-list class="profile-fields-list">
+
+          <mat-list-item>
+            <img matListAvatar [src]="member.groupeaseUser.pictureUrl" />
+            <p matLine>
+              {{member.groupeaseUser.name}}
+            </p>
+          </mat-list-item>
+
+          <mat-list-item>
+            <mat-icon matListIcon>
+              person
+            </mat-icon>
+            <p matLine>
+              {{member.groupeaseUser.nickname}}
+            </p>
+          </mat-list-item>
+
+          <mat-list-item>
+            <mat-icon matListIcon>
+              mail
+            </mat-icon>
+            <p matLine>
+              {{member.groupeaseUser.email}}
+            </p>
+          </mat-list-item>
+
+          <mat-list-item>
+            <mat-icon matListIcon>
+              settings
+            </mat-icon>
+            <p matLine>
+              Channel Owner: {{member.owner? 'YES' : 'NO'}}
+            </p>
+          </mat-list-item>
+
+        </mat-list>
+
+        <mat-form-field>
+
+          <textarea matInput
+                    name="availability"
+                    [(ngModel)]="member.availability"
+                    #availability="ngModel"
+                    matTextareaAutosize></textarea>
+
+          <mat-placeholder>
+            <mat-icon>
+              date_range
+            </mat-icon>
+            <span>
+              Availability
+            </span>
+          </mat-placeholder>
+
+          <mat-hint>
+            When you are available to work (e.g. "Weekdays 6-10pm")
+          </mat-hint>
+
+          <mat-error *ngIf="availability.invalid">
+            Availability is invalid
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field>
+
+          <textarea matInput
+                    name="goals"
+                    [(ngModel)]="member.goals"
+                    #goals="ngModel"
+                    matTextareaAutosize></textarea>
+
+          <mat-placeholder>
+            <mat-icon>
+              assessment
+            </mat-icon>
+            <span>
+              Goals
+            </span>
+          </mat-placeholder>
+
+          <mat-hint>
+            Your goals for this channel (e.g. "Learn Angular" or "Get an 'A'")
+          </mat-hint>
+
+          <mat-error *ngIf="goals.invalid">
+            Goals are invalid
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field>
+
+          <textarea matInput
+                    name="skills"
+                    [(ngModel)]="member.skills"
+                    #skills="ngModel"
+                    matTextareaAutosize></textarea>
+
+          <mat-placeholder>
+            <mat-icon>
+              done
+            </mat-icon>
+            <span>
+              Skills
+            </span>
+          </mat-placeholder>
+
+          <mat-hint>
+            Your strengths that may be relevant within this channel (e.g. "Developing Java web apps")
+          </mat-hint>
+
+          <mat-error *ngIf="skills.invalid">
+            Skills are invalid
+          </mat-error>
+
+        </mat-form-field>
+
+      </mat-card-content>
+
+      <mat-card-actions>
+
+        <button mat-button
+                type="reset">
+          RESET
+        </button>
+
+        <button mat-button
+                type="submit"
+                color="primary"
+                [disabled]="!memberForm.form.valid">
+          SAVE
+        </button>
+
+      </mat-card-actions>
+
+    </mat-card>
+
+  </form>
+
+</div>
+

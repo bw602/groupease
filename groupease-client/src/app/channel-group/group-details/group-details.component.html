@@ -1,0 +1,30 @@
+<div class="group-details-container">
+
+  <nav mat-tab-nav-bar>
+
+    <a mat-tab-link
+       routerLink="home"
+       routerLinkActive #homeRoute="routerLinkActive"
+       [active]="homeRoute.isActive">
+      Details
+    </a>
+
+    <a mat-tab-link
+       routerLink="requests"
+       routerLinkActive #requestsRoute="routerLinkActive"
+       [active]="requestsRoute.isActive">
+      Join Requests
+    </a>
+
+    <a mat-tab-link
+       routerLink="invitations"
+       routerLinkActive #invitationsRoute="routerLinkActive"
+       [active]="invitationsRoute.isActive">
+      Invitations
+    </a>
+
+  </nav>
+
+  <router-outlet></router-outlet>
+
+</div>

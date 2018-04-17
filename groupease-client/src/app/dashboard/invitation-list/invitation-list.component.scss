@@ -4,3 +4,14 @@
   flex: 1 1 auto;
   padding: 20px;
 }
+
+.invitation-header {
+  display: flex;
+  align-items: center;
+}
+
+.invitation-channel-name {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+}

@@ -1,3 +1,84 @@
-<p>
-  channel-group-directory works!
-</p>
+<div class="channel-group-directory-container">
+
+  <h1>
+    Channel Groups
+  </h1>
+
+  <mat-accordion>
+
+    <mat-expansion-panel *ngFor="let group of groupListObservable | async"
+                         #groupPanel="matExpansionPanel">
+
+      <mat-expansion-panel-header class="group-header">
+
+        <mat-icon>
+          group
+        </mat-icon>
+
+        <div class="group-name">
+          <span>
+            {{group.name}}
+          </span>
+        </div>
+
+      </mat-expansion-panel-header>
+
+      <ng-template matExpansionPanelContent>
+
+        <mat-panel-description>
+          {{group.description}}
+        </mat-panel-description>
+
+        <div class="group-members">
+
+          <h3>
+            Members
+          </h3>
+
+          <mat-chip-list [selectable]="false">
+
+            <mat-chip *ngFor="let member of group.members">
+
+              <img class="chip-avatar"
+                   [src]="member.groupeaseUser.pictureUrl" />
+
+              <span>
+                {{member.groupeaseUser.name}}
+              </span>
+
+            </mat-chip>
+
+          </mat-chip-list>
+
+        </div>
+
+        <mat-action-row>
+          <button mat-button
+                  (click)="groupPanel.close()">
+            CLOSE
+          </button>
+
+          <a mat-button
+             color="primary"
+             [routerLink]="['../', group.id]">
+            VIEW DETAILS
+          </a>
+        </mat-action-row>
+
+      </ng-template>
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+  <div class="groupease-fab-container">
+    <a mat-fab
+       matTooltip="Add group"
+       routerLink="../create">
+      <mat-icon aria-label="Add group">
+        group_add
+      </mat-icon>
+    </a>
+  </div>
+
+</div>

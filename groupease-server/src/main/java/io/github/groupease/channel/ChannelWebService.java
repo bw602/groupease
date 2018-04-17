@@ -4,7 +4,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -59,10 +58,10 @@ public class ChannelWebService {
     public List<Channel> list(
             @QueryParam("userId") Long userId
     ) {
-        LOGGER.debug("ChannelWebService.list() called with memberId: '{}'.", userId);
+        LOGGER.debug("ChannelWebService.list() called with userId: '{}'.", userId);
         if (userId != null) {
             return channelService.list(userId);
-        } else 
+        } else
             return channelService.list();
     }
 
@@ -79,7 +78,7 @@ public class ChannelWebService {
     public Channel getById(
             @PathParam("id") Long id
     ) {
-        LOGGER.debug("ChannelWebService.getById({}) called.", id);
+        LOGGER.debug("ChannelWebService.getForUser({}) called.", id);
         return channelService.getById(id);
     }
 
@@ -89,7 +88,7 @@ public class ChannelWebService {
      * @param id the ID of the {@link Channel} instance to update.
      * @param toUpdate the {@link ChannelDto} instance to save.
      * @return the updated {@link Channel} instance.
-     * @throws IllegalArgumentException if id and toUpdate.getId() do NOT match.
+     * @throws ChannelIdMismatchException if id and toUpdate.getId() do NOT match.
      */
     @PUT
     @Path("{id}")

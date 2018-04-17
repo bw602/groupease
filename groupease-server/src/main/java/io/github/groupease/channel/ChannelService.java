@@ -18,9 +18,10 @@ public interface ChannelService {
     List<Channel> list();
 
     /**
-     * Fetch all {@link Channel} instances that Member is a part of.
+     * Fetch all {@link Channel} instances of which the provided user ID is a member.
      *
-     * @return the list of all {@link Channel} instances that include the memberId.
+     * @param userId of the user to look up.
+     * @return the list of all {@link Channel} instances that include the userId as a member.
      */
     @Nonnull
     List<Channel> list(

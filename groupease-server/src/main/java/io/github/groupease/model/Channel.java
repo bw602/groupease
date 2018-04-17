@@ -1,13 +1,20 @@
 package io.github.groupease.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name="Channel")
 public class Channel
@@ -57,4 +64,23 @@ public class Channel
     public Instant getLastUpdatedOn() {
         return lastUpdatedOn;
     }
+
+    @Override
+    public boolean equals(
+            @Nullable Object o
+    ) {
+        return EqualsBuilder.reflectionEquals(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Nonnull
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
 }

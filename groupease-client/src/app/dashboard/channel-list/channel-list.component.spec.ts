@@ -16,7 +16,7 @@ describe('ChannelListComponent', () => {
     channelService = jasmine.createSpyObj(
       'ChannelService',
       [
-        'listAll'
+        'listWhereMember'
       ]
     );
 
@@ -42,7 +42,7 @@ describe('ChannelListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ChannelListComponent);
     component = fixture.componentInstance;
-    channelService.listAll.and.returnValue(of([]));
+    channelService.listWhereMember.and.returnValue(of([]));
     fixture.detectChanges();
   });
 

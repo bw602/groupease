@@ -3,3 +3,15 @@
   flex-direction: column;
   flex: 1 1 auto;
 }
+
+.channel-panel-header {
+  margin-left: 16px;
+}
+
+.channel-panel-contents {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  justify-content: space-between;
+}

@@ -54,7 +54,7 @@ public class DefaultUserService implements UserService {
     @Override
     @Timed
     public GroupeaseUser getById(long id) {
-        LOGGER.debug("DefaultUserService.getById({}) called.", id);
+        LOGGER.debug("DefaultUserService.getForUser({}) called.", id);
         return userDao.getById(id);
     }
 
