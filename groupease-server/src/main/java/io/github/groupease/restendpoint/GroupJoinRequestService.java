@@ -6,13 +6,13 @@ import io.github.groupease.auth.CurrentUserId;
 import io.github.groupease.db.GroupDao;
 import io.github.groupease.db.GroupJoinRequestDao;
 import io.github.groupease.db.GroupeaseUserDao;
-import io.github.groupease.exception.GroupJoinRequestNotFoundException;
-import io.github.groupease.exception.GroupNotFoundException;
-import io.github.groupease.exception.NotGroupMemberException;
-import io.github.groupease.exception.NotSenderException;
+import io.github.groupease.exception.*;
 import io.github.groupease.model.Group;
 import io.github.groupease.model.GroupJoinRequest;
 import io.github.groupease.model.GroupeaseUser;
+import io.github.groupease.model.Member;
+import io.github.groupease.user.UserNotFoundException;
+import io.github.groupease.util.CommentWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +20,11 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Optional;
 
 @Path("channels/{channelId}/groups/{groupId}/join-requests")
 @Produces(MediaType.APPLICATION_JSON)
@@ -195,13 +197,49 @@ public class GroupJoinRequestService {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Timed
     @Transactional
-    public GroupJoinRequest create(@PathParam("channelId") long channelId, @PathParam("groupId") long groupId)
+    public GroupJoinRequest create(@PathParam("channelId") long channelId, @PathParam("groupId") long groupId,
+                                   @Nonnull CommentWrapper wrapper)
     {
-        LOGGER.debug("GroupJoinRequestService.create()");
+        LOGGER.debug("GroupJoinRequestService.create(channel={}, group={})", channelId, groupId);
 
-        return null;
+        GroupeaseUser user = userDao.getByProviderId(currentUserIdProvider.get());
+        if(user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        // Check that user is a member of the channel this group is in
+        if(!isGroupMember(channelId, groupId))
+        {
+            throw new NotChannelMemberException("You cannot request to join a group in a channel you are not a member of");
+        }
+
+        // Make sure that the group exists
+        Group group = groupDao.get(groupId);
+        if(group == null || group.getChannelId() != channelId)
+        {
+            throw new GroupNotFoundException("No group with that ID in that channel was found");
+        }
+
+        // Check if an existing group join request for this user and group already exists
+        List<GroupJoinRequest> existing = requestDao.list(groupId, user.getId());
+        if(existing!=null)
+        {
+            throw new DuplicateGroupJoinRequestException("You've already sent a join request to this group. You cannot send another");
+        }
+
+        // Check if the user is already a member of the group
+        if(group.getMembers().stream().noneMatch(member -> member.getGroupeaseUser().equals(loggedInUser)))
+        {
+            throw new AlreadyMemberException("User cannot request to join group the user is already a member of");
+        }
+
+        return requestDao.create(user.getMemberList().stream()
+                .filter(member -> member.getChannel().getId() == channelId).findFirst().get(),
+                group,  wrapper.comments);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import io.github.groupease.model.Group;
 import io.github.groupease.model.GroupJoinRequest;
+import io.github.groupease.model.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,18 +51,18 @@ public class GroupJoinRequestDao
     /**
      * Gets a list of any {@link GroupJoinRequest}s sent to a group from a particular user
      * @param groupId The unique of the group to get requests for
-     * @param senderId The user to filter the list by
+     * @param senderUserId The user to filter the list by
      * @return The list of requests for the group from the user. If there are none, the list will be empty
      */
-    public List<GroupJoinRequest> list(long groupId, long senderId)
+    public List<GroupJoinRequest> list(long groupId, long senderUserId)
     {
-        LOGGER.debug("GroupJoinRequestDao.list(group={}, sender={})", groupId, senderId);
+        LOGGER.debug("GroupJoinRequestDao.list(group={}, sender={})", groupId, senderUserId);
 
         TypedQuery<GroupJoinRequest> query = entityManager.createQuery(
-                "SELECT gjr FROM GroupJoinRequest gjr WHERE gjr.group.id = :groupId AND gjr.sender.id = :senderId",
+                "SELECT gjr FROM GroupJoinRequest gjr WHERE gjr.group.id = :groupId AND gjr.sender.userProfile.id = :senderId",
                 GroupJoinRequest.class);
         query.setParameter("groupId", groupId);
-        query.setParameter("senderId", senderId);
+        query.setParameter("senderId", senderUserId);
 
         return query.getResultList();
     }
@@ -91,6 +92,26 @@ public class GroupJoinRequestDao
         }
 
         return result.get(0);
+    }
+
+    /**
+     * Creates a new {@link GroupJoinRequest} from the provided values and stores it in the database
+     * @param sender The {@link Member} that is sending the join request
+     * @param group The {@link Group} that the recipient is being invited to
+     * @param comments Free text comments supplied by the user for the group members to read
+     * @return The newly created join request including assigned unique ID
+     */
+    @Transactional
+    public GroupJoinRequest create(Member sender, Group group, String comments)
+    {
+        LOGGER.debug("GroupJoinRequestDao.create(sender={}, group={}, comments={}",
+                sender.getId(), group.getId(), comments);
+
+        GroupJoinRequest newJoinRequest = new GroupJoinRequest(sender, group, comments);
+
+        entityManager.persist(newJoinRequest);
+
+        return newJoinRequest;
     }
 
     /**

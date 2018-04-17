@@ -19,12 +19,21 @@ public class GroupJoinRequest {
 
     @ManyToOne
     @JoinColumn(name = "SenderID", referencedColumnName = "ID")
-    private GroupeaseUser sender;
+    private Member sender;
 
     private String comments;
 
     @UpdateTimestamp
     private Instant lastUpdate;
+
+    public GroupJoinRequest() {}
+
+    public GroupJoinRequest(Member sender, Group group, String comments)
+    {
+        this.sender = sender;
+        this.group = group;
+        this.comments = comments;
+    }
 
     /**
      * Gets the unique ID of this join request
@@ -46,7 +55,7 @@ public class GroupJoinRequest {
      * Gets the {@link GroupeaseUser} that sent this join request
      * @return The user that sent the join request
      */
-    public GroupeaseUser getSender() { return sender; }
+    public GroupeaseUser getSender() { return sender.getGroupeaseUser(); }
 
     /**
      * Gets the free text comments the sender submitted with the request
