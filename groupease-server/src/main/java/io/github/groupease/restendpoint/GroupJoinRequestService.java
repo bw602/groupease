@@ -212,10 +212,13 @@ public class GroupJoinRequestService {
         }
 
         // Check that user is a member of the channel this group is in
-        if(!isGroupMember(channelId, groupId))
+        Optional<Member> possibleUserMember = user.getMemberList().stream()
+                .filter(member -> member.getChannel().getId() == channelId).findFirst();
+        if(!possibleUserMember.isPresent())
         {
             throw new NotChannelMemberException("You cannot request to join a group in a channel you are not a member of");
         }
+        Member currentUserMember = possibleUserMember.get();
 
         // Make sure that the group exists
         Group group = groupDao.get(groupId);
@@ -226,20 +229,18 @@ public class GroupJoinRequestService {
 
         // Check if an existing group join request for this user and group already exists
         List<GroupJoinRequest> existing = requestDao.list(groupId, user.getId());
-        if(existing!=null)
+        if(!existing.isEmpty())
         {
             throw new DuplicateGroupJoinRequestException("You've already sent a join request to this group. You cannot send another");
         }
 
         // Check if the user is already a member of the group
-        if(group.getMembers().stream().noneMatch(member -> member.getGroupeaseUser().equals(loggedInUser)))
+        if(group.getMembers().contains(currentUserMember))
         {
             throw new AlreadyMemberException("User cannot request to join group the user is already a member of");
         }
 
-        return requestDao.create(user.getMemberList().stream()
-                .filter(member -> member.getChannel().getId() == channelId).findFirst().get(),
-                group,  wrapper.comments);
+        return requestDao.create(currentUserMember, group, wrapper.comments);
     }
 
     /**
