@@ -76,7 +76,7 @@ export class GroupInvitationService {
     groupInvitation: GroupInvitation
   ): Observable<GroupInvitation> {
 
-    const recipientUserId = groupInvitation.recipient.groupeaseUser.id;
+    const recipientUserId = groupInvitation.recipient.id;
     const channelId = groupInvitation.group.channelId;
     const url = `api/users/${recipientUserId}/channels/${channelId}/group-invitations`;
 
@@ -97,7 +97,7 @@ export class GroupInvitationService {
     groupInvitation: GroupInvitation
   ): Observable<GroupInvitation> {
 
-    const recipientUserId = groupInvitation.recipient.groupeaseUser.id;
+    const recipientUserId = groupInvitation.recipient.id;
     const channelId = groupInvitation.group.channelId;
     const invitationId = groupInvitation.id;
     const url = `api/users/${recipientUserId}/channels/${channelId}/group-invitations/${invitationId}/acceptance`;
@@ -119,7 +119,7 @@ export class GroupInvitationService {
     groupInvitation: GroupInvitation
   ): Observable<GroupInvitation> {
 
-    const recipientUserId = groupInvitation.recipient.groupeaseUser.id;
+    const recipientUserId = groupInvitation.recipient.id;
     const channelId = groupInvitation.group.channelId;
     const invitationId = groupInvitation.id;
     const url = `api/users/${recipientUserId}/channels/${channelId}/group-invitations/${invitationId}/rejection`;
@@ -141,7 +141,7 @@ export class GroupInvitationService {
     groupInvitation: GroupInvitation
   ): Observable<GroupInvitation> {
 
-    const recipientUserId = groupInvitation.recipient.groupeaseUser.id;
+    const recipientUserId = groupInvitation.recipient.id;
     const channelId = groupInvitation.group.channelId;
     const invitationId = groupInvitation.id;
     const url = `api/users/${recipientUserId}/channels/${channelId}/group-invitations/${invitationId}`;
