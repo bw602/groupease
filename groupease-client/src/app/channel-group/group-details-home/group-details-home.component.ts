@@ -2,6 +2,7 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from '../../core/group';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'app-group-details-home',
