@@ -47,7 +47,7 @@ export class GroupDetailsInvitationsComponent implements OnInit {
 
     const groupInvitation: GroupInvitation = new GroupInvitation();
     groupInvitation.group = this.group;
-    groupInvitation.recipient = member;
+    groupInvitation.recipient = member.groupeaseUser;
 
     this.groupInvitationService.createInvitation(groupInvitation)
       .subscribe(

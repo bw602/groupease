@@ -1,12 +1,12 @@
 import { Group } from './group';
-import { Member } from './member';
+import { User } from './user';
 
 export class GroupInvitation {
 
   id: number;
   group: Group;
-  sender: Member;
-  recipient: Member;
+  sender: User;
+  recipient: User;
   lastUpdate: number;
 
 }

@@ -1,0 +1,16 @@
+.member-invitations-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+}
+
+.group-name {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+}

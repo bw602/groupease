@@ -8,10 +8,12 @@ import { MemberInvitationsComponent } from './member-invitations/member-invitati
 import {
   MatButtonModule,
   MatCardModule,
+  MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
-  MatListModule, MatSnackBarModule,
+  MatListModule,
+  MatSnackBarModule,
   MatTabsModule
 } from '@angular/material';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +25,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MatButtonModule,
     MatCardModule,
+    MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
